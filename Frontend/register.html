@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Register | Smart Gadget Marketplace</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background:
+          linear-gradient(rgba(5, 8, 22, 0.85), rgba(10, 15, 31, 0.95)),
+          url("https://images.unsplash.com/photo-1518770660439-4636190af475");
+
+        background-size: cover;
+        background-position: center;
+      }
+
+      .register-box {
+        width: 420px;
+        background: #111827;
+        padding: 35px;
+
+        border-radius: 15px;
+        border: 1px solid #1e293b;
+
+        box-shadow: 0 0 25px rgba(77, 168, 255, 0.25);
+      }
+
+      h2 {
+        text-align: center;
+        color: #4da8ff;
+        margin-bottom: 25px;
+      }
+
+      .input-box {
+        position: relative;
+        margin-bottom: 15px;
+      }
+
+      .input-box i {
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        color: #4da8ff;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 14px 14px 14px 45px;
+
+        background: #1f2937;
+
+        border: none;
+        outline: none;
+
+        border-radius: 8px;
+
+        color: white;
+      }
+
+      option {
+        color: black;
+      }
+
+      button {
+        width: 100%;
+
+        padding: 14px;
+
+        background: #4da8ff;
+
+        border: none;
+
+        border-radius: 8px;
+
+        color: white;
+
+        font-size: 16px;
+
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #2563eb;
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 20px;
+
+        color: white;
+      }
+
+      .login-link a {
+        color: #4da8ff;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="register-box">
+      <h2>
+        <i class="fa fa-user-plus"></i>
+        Create Account
+      </h2>
+
+      <form onsubmit="return registerUser();">
+        <div class="input-box">
+          <i class="fa fa-user"></i>
+
+          <input id="full_name" type="text" placeholder="Full Name" required />
+        </div>
+
+        <div class="input-box">
+          <i class="fa fa-user"></i>
+
+          <input id="username" type="text" placeholder="Username" required />
+        </div>
+
+        <div class="input-box">
+          <i class="fa fa-envelope"></i>
+
+          <input id="email" type="email" placeholder="Email" required />
+        </div>
+
+        <div class="input-box">
+          <i class="fa fa-phone"></i>
+
+          <input id="phone" type="text" placeholder="Phone Number" required />
+        </div>
+
+        <div class="input-box">
+          <i class="fa fa-user-tag"></i>
+
+          <select id="role" required>
+            <option value="">Select Role</option>
+
+            <option value="customer">Customer</option>
+
+            <option value="seller">Seller</option>
+          </select>
+        </div>
+
+        <div class="input-box">
+          <i class="fa fa-lock"></i>
+
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <div class="input-box">
+          <i class="fa fa-lock"></i>
+
+          <input
+            id="confirm_password"
+            type="password"
+            placeholder="Confirm Password"
+            required
+          />
+        </div>
+
+        <button type="submit">Register</button>
+      </form>
+
+      <div class="login-link">
+        Already have account?
+
+        <a href="login.html"> Login </a>
+      </div>
+    </div>
+    <script>
+      async function registerUser() {
+        event.preventDefault();
+
+        const full_name = document.getElementById("full_name").value.trim();
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const role = document.getElementById("role").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+          document.getElementById("confirm_password").value;
+
+        if (password !== confirmPassword) {
+          alert("Passwords do not match.");
+          return false;
+        }
+
+        if (role === "") {
+          alert("Please select a role.");
+          return false;
+        }
+
+        const data = {
+          full_name,
+          username,
+          email,
+          phone,
+          password,
+          role,
+        };
+
+        try {
+          const response = await fetch("http://localhost:3000/api/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          alert(result.message);
+
+          if (response.ok) {
+            window.location.href = "login.html";
+          }
+        } catch (err) {
+          console.log(err);
+          alert("Server Connection Failed");
+        }
+
+        return false;
+      }
+    </script>
+  </body>
+</html>

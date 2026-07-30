@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Customer Dashboard | Smart Gadget Marketplace</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="../css/customer-dashboard.css" />
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <div class="logo">
+        <i class="fas fa-microchip"></i>
+        <h2>Smart Gadget</h2>
+      </div>
+
+      <ul>
+        <li class="active">
+          <a href="customer-dashboard.html">
+            <i class="fas fa-chart-line"></i>
+            Dashboard
+          </a>
+        </li>
+
+        <li>
+          <a href="customer-shop.html">
+            <i class="fas fa-store"></i>
+            Shop
+          </a>
+        </li>
+
+        <li>
+          <a href="cart.html">
+            <i class="fas fa-cart-shopping"></i>
+            Cart
+          </a>
+        </li>
+
+        <li>
+          <a href="customer-orders.html">
+            <i class="fas fa-box"></i>
+            Orders
+          </a>
+        </li>
+
+        <li>
+          <a href="customer-profile.html">
+            <i class="fas fa-user"></i>
+            Profile
+          </a>
+        </li>
+
+        <li>
+          <a href="login.html" onclick="logout()">
+            <i class="fas fa-right-from-bracket"></i>
+            Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main">
+      <div class="topbar">
+        <div>
+          <h1>Customer Dashboard</h1>
+
+          <p id="welcomeUser">Welcome</p>
+        </div>
+
+        <div class="top-icons">
+          <i class="fas fa-bell"></i>
+
+          <i class="fas fa-user-circle"></i>
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <i class="fas fa-shopping-cart"></i>
+
+          <h2 id="cartCount">0</h2>
+
+          <p>Cart Items</p>
+        </div>
+
+        <div class="card">
+          <i class="fas fa-box"></i>
+
+          <h2 id="orderCount">0</h2>
+
+          <p>Total Orders</p>
+        </div>
+
+        <div class="card">
+          <i class="fas fa-dollar-sign"></i>
+
+          <h2 id="spentAmount">0</h2>
+
+          <p>Total Spent</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="action">
+          <h3>Shop Products</h3>
+
+          <button onclick="location.href = 'customer-shop.html'">
+            Open Shop
+          </button>
+        </div>
+
+        <div class="action">
+          <h3>View Orders</h3>
+
+          <button onclick="location.href = 'customer-orders.html'">
+            My Orders
+          </button>
+        </div>
+
+        <div class="action">
+          <h3>My Profile</h3>
+
+          <button onclick="location.href = 'customer-profile.html'">
+            Profile
+          </button>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <h2>Latest Products</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+
+              <th>Category</th>
+
+              <th>Price</th>
+
+              <th>Added Date</th>
+
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="productTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="js/customer-dashboard.js"></script>
+  </body>
+</html>

@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>Shop Profile | Seller Panel</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: #0a0f1f;
+        color: white;
+        display: flex;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        width: 260px;
+        height: 100vh;
+        position: fixed;
+
+        background: #050816;
+
+        border-right: 1px solid #1e293b;
+
+        padding: 25px 20px;
+      }
+
+      .logo {
+        font-size: 24px;
+        color: #4da8ff;
+
+        margin-bottom: 40px;
+      }
+
+      .logo i {
+        margin-right: 10px;
+      }
+
+      .menu a {
+        display: flex;
+        align-items: center;
+
+        gap: 15px;
+
+        padding: 15px;
+
+        margin-bottom: 10px;
+
+        text-decoration: none;
+
+        color: #cbd5e1;
+
+        border-radius: 10px;
+      }
+
+      .menu a:hover,
+      .menu .active {
+        background: #1e293b;
+
+        color: #4da8ff;
+      }
+
+      .logout {
+        position: absolute;
+
+        bottom: 30px;
+
+        width: 220px;
+
+        padding: 12px;
+
+        background: #111827;
+
+        border: 1px solid #4da8ff;
+
+        color: #4da8ff;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+      }
+
+      .logout:hover {
+        background: #4da8ff;
+
+        color: white;
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 260px;
+
+        width: calc(100% - 260px);
+      }
+
+      .header {
+        background: #050816;
+
+        padding: 25px 40px;
+
+        border-bottom: 1px solid #1e293b;
+      }
+
+      .header h1 {
+        color: #4da8ff;
+      }
+
+      .profile-container {
+        padding: 40px;
+
+        display: flex;
+
+        justify-content: center;
+      }
+
+      .profile-card {
+        width: 700px;
+
+        background: #111827;
+
+        border: 1px solid #1e293b;
+
+        border-radius: 20px;
+
+        padding: 40px;
+
+        box-shadow: 0 0 30px rgba(77, 168, 255, 0.2);
+      }
+
+      .shop-image {
+        text-align: center;
+      }
+
+      .shop-image img {
+        width: 130px;
+
+        height: 130px;
+
+        border-radius: 50%;
+
+        border: 3px solid #4da8ff;
+
+        object-fit: cover;
+      }
+
+      .shop-image i {
+        font-size: 80px;
+
+        color: #4da8ff;
+      }
+
+      .profile-card h2 {
+        text-align: center;
+
+        margin: 20px 0;
+
+        color: #4da8ff;
+      }
+
+      .info {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 20px;
+      }
+
+      .box {
+        background: #0a0f1f;
+
+        padding: 15px;
+
+        border-radius: 10px;
+
+        border: 1px solid #1e293b;
+      }
+
+      .box label {
+        color: #64748b;
+
+        font-size: 14px;
+      }
+
+      .box p {
+        margin-top: 8px;
+
+        color: white;
+      }
+
+      .status {
+        color: #22c55e;
+      }
+
+      button {
+        margin-top: 30px;
+
+        width: 100%;
+
+        padding: 13px;
+
+        background: #4da8ff;
+
+        border: none;
+
+        border-radius: 8px;
+
+        color: white;
+
+        font-size: 16px;
+
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #2563eb;
+      }
+
+      @media (max-width: 800px) {
+        .sidebar {
+          width: 80px;
+        }
+
+        .logo span,
+        .menu span {
+          display: none;
+        }
+
+        .main {
+          margin-left: 80px;
+        }
+
+        .info {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+      <div class="logo">
+        <i class="fas fa-store"></i>
+
+        <span> Seller Panel </span>
+      </div>
+
+      <div class="menu">
+        <a href="seller-dashboard.html">
+          <i class="fas fa-home"></i>
+
+          <span> Dashboard </span>
+        </a>
+
+        <a href="seller-products.html">
+          <i class="fas fa-box"></i>
+
+          <span> Products </span>
+        </a>
+
+        <a href="seller-orders.html">
+          <i class="fas fa-shopping-cart"></i>
+
+          <span> Orders </span>
+        </a>
+
+        <a href="seller-deliveries.html">
+          <i class="fas fa-truck"></i>
+
+          <span> Deliveries </span>
+        </a>
+
+        <a href="seller-profile.html" class="active">
+          <i class="fas fa-user"></i>
+
+          <span> Shop Profile </span>
+        </a>
+      </div>
+
+      <button class="logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+
+        Logout
+      </button>
+    </div>
+
+    <div class="main">
+      <div class="header">
+        <h1>
+          <i class="fas fa-store"></i>
+
+          Shop Profile
+        </h1>
+      </div>
+
+      <div class="profile-container">
+        <div class="profile-card">
+          <div class="shop-image">
+            <i class="fas fa-store"></i>
+          </div>
+
+          <h2 id="shopName">Loading Shop...</h2>
+
+          <div class="info">
+            <div class="box">
+              <label> Owner Name </label>
+
+              <p id="owner">-</p>
+            </div>
+
+            <div class="box">
+              <label> Email </label>
+
+              <p id="email">-</p>
+            </div>
+
+            <div class="box">
+              <label> Phone </label>
+
+              <p id="phone">-</p>
+            </div>
+
+            <div class="box">
+              <label> Address </label>
+
+              <p id="address">-</p>
+            </div>
+
+            <div class="box">
+              <label> City </label>
+
+              <p id="city">-</p>
+            </div>
+
+            <div class="box">
+              <label> Account Status </label>
+
+              <p class="status" id="status">ACTIVE</p>
+            </div>
+          </div>
+
+          <button onclick="editProfile()">
+            <i class="fas fa-edit"></i>
+            Edit Shop Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        loadProfile();
+      });
+
+      async function loadProfile() {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        console.log("USER DATA:", user);
+
+        if (!user) {
+          window.location.href = "../login.html";
+          return;
+        }
+
+        const seller_id = user.SELLER_ID || localStorage.getItem("seller_id");
+
+        console.log("SELLER ID:", seller_id);
+
+        if (!seller_id || seller_id === "null") {
+          alert("Seller ID not found. Please login again.");
+
+          localStorage.clear();
+
+          window.location.href = "../login.html";
+
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            "http://localhost:3000/api/seller/profile/" + seller_id,
+          );
+
+          console.log("PROFILE RESPONSE:", response.status);
+
+          if (!response.ok) {
+            throw new Error("Profile API Error : " + response.status);
+          }
+
+          const data = await response.json();
+
+          console.log("PROFILE DATA:", data);
+
+          document.getElementById("shopName").innerHTML = data.SHOP_NAME;
+
+          document.getElementById("owner").innerHTML = data.OWNER_NAME;
+
+          document.getElementById("email").innerHTML = data.EMAIL;
+
+          document.getElementById("phone").innerHTML = data.PHONE || "-";
+
+          document.getElementById("address").innerHTML = data.ADDRESS || "-";
+
+          document.getElementById("city").innerHTML = data.CITY || "-";
+
+          document.getElementById("status").innerHTML = data.STATUS;
+
+          // Save latest seller id
+
+          localStorage.setItem("seller_id", data.SELLER_ID);
+        } catch (error) {
+          console.log("PROFILE LOAD ERROR:", error);
+
+          alert("Unable to load seller profile");
+        }
+      }
+
+      function editProfile() {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        const seller_id = user.SELLER_ID || localStorage.getItem("seller_id");
+
+        window.location.href =
+          "seller-profile-edit.html?seller_id=" + seller_id;
+      }
+
+      function logout() {
+        localStorage.removeItem("user");
+
+        localStorage.removeItem("seller_id");
+
+        localStorage.removeItem("role");
+
+        window.location.href = "../login.html";
+      }
+    </script>
+  </body>
+</html>

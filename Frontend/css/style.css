@@ -1,0 +1,258 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI";
+}
+
+body {
+  background: #050816;
+  color: white;
+}
+
+/* HEADER */
+
+header {
+  height: 80px;
+  background: #050816;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8%;
+  border-bottom: 1px solid #1e293b;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: bold;
+  color: #4da8ff;
+}
+
+.logo i {
+  margin-right: 10px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 17px;
+}
+
+nav a:hover {
+  color: #4da8ff;
+}
+
+.icons i {
+  font-size: 20px;
+  margin-left: 20px;
+}
+
+/* HERO */
+
+.hero {
+  height: 700px;
+
+  background:
+    linear-gradient(rgba(5, 8, 22, 0.75), rgba(5, 8, 22, 0.85)),
+    url("https://images.unsplash.com/photo-1518770660439-4636190af475");
+
+  background-size: cover;
+
+  background-position: center;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 80px;
+}
+
+.hero span {
+  color: #4da8ff;
+}
+
+.hero p {
+  font-size: 22px;
+
+  margin: 30px;
+}
+
+button {
+  background: #4da8ff;
+
+  border: none;
+
+  padding: 15px 40px;
+
+  border-radius: 8px;
+
+  color: white;
+
+  font-size: 18px;
+
+  cursor: pointer;
+}
+
+/* STATS */
+
+.stats {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 25px;
+
+  padding: 50px 8%;
+}
+
+.stat {
+  background: #111827;
+
+  padding: 35px;
+
+  text-align: center;
+
+  border-radius: 20px;
+
+  border: 1px solid #1e293b;
+}
+
+.stat i {
+  font-size: 40px;
+
+  color: #4da8ff;
+}
+
+/* COMMON */
+
+.section {
+  padding: 80px 8%;
+}
+
+.title {
+  text-align: center;
+
+  font-size: 40px;
+
+  margin-bottom: 50px;
+
+  color: white;
+}
+
+.grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+  gap: 30px;
+}
+
+.card,
+.product {
+  background: #111827;
+
+  padding: 30px;
+
+  border-radius: 20px;
+
+  border: 1px solid #1e293b;
+
+  text-align: center;
+}
+
+.card i {
+  font-size: 50px;
+
+  color: #4da8ff;
+
+  margin-bottom: 20px;
+}
+
+.product img {
+  width: 100%;
+
+  height: 250px;
+
+  object-fit: cover;
+
+  border-radius: 15px;
+}
+
+.product h2 {
+  color: #4da8ff;
+
+  margin: 15px;
+}
+
+.newsletter {
+  background: #2563eb;
+
+  padding: 80px;
+
+  text-align: center;
+}
+
+.newsletter input {
+  padding: 15px;
+
+  width: 350px;
+
+  border-radius: 8px;
+
+  border: none;
+
+  margin: 20px;
+}
+
+footer {
+  background: #050816;
+
+  padding: 60px 8%;
+
+  border-top: 1px solid #1e293b;
+}
+
+.footer-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 30px;
+}
+
+footer i {
+  color: #4da8ff;
+
+  font-size: 25px;
+
+  margin: 10px;
+}
+
+.copy {
+  text-align: center;
+
+  color: #94a3b8;
+
+  margin-top: 30px;
+}
+
+@media (max-width: 900px) {
+  .hero h1 {
+    font-size: 45px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}

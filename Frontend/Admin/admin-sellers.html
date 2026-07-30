@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>Admin Sellers | Smart Gadget Marketplace</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: #0a0f1f;
+        color: white;
+      }
+
+      .header {
+        background: #050816;
+
+        padding: 20px 40px;
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        border-bottom: 1px solid #1e293b;
+      }
+
+      .header h1 {
+        color: #4da8ff;
+
+        font-size: 28px;
+      }
+
+      .header i {
+        margin-right: 10px;
+      }
+
+      .back {
+        background: #1f2937;
+
+        color: #4da8ff;
+
+        border: 1px solid #4da8ff;
+
+        padding: 10px 25px;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+      }
+
+      .back:hover {
+        background: #4da8ff;
+
+        color: white;
+      }
+
+      .container {
+        padding: 40px;
+      }
+
+      .title {
+        font-size: 30px;
+
+        color: #4da8ff;
+
+        margin-bottom: 25px;
+      }
+
+
+      .search-box {
+        background: #111827;
+
+        padding: 20px;
+
+        border-radius: 12px;
+
+        border: 1px solid #1e293b;
+
+        margin-bottom: 25px;
+      }
+
+      .search-box input {
+        width: 100%;
+
+        padding: 14px;
+
+        background: #1f2937;
+
+        border: none;
+
+        border-radius: 8px;
+
+        color: white;
+
+        font-size: 15px;
+      }
+
+
+      .table-box {
+        background: #111827;
+
+        border: 1px solid #1e293b;
+
+        border-radius: 15px;
+
+        overflow: hidden;
+
+        box-shadow: 0 0 25px rgba(77, 168, 255, 0.15);
+      }
+
+      table {
+        width: 100%;
+
+        border-collapse: collapse;
+      }
+
+      thead {
+        background: #050816;
+      }
+
+      th {
+        padding: 18px;
+
+        text-align: left;
+
+        color: #4da8ff;
+      }
+
+      td {
+        padding: 16px;
+
+        border-bottom: 1px solid #1e293b;
+
+        color: #cbd5e1;
+      }
+
+      tr:hover {
+        background: #1f2937;
+      }
+
+
+      .status {
+        padding: 6px 15px;
+
+        border-radius: 20px;
+
+        font-size: 13px;
+
+        font-weight: bold;
+      }
+
+      .active {
+        background: #16a34a;
+
+        color: white;
+      }
+
+      .pending {
+        background: #f59e0b;
+
+        color: white;
+      }
+
+      .rejected {
+        background: #ef4444;
+
+        color: white;
+      }
+
+
+      button {
+        border: none;
+
+        padding: 9px 15px;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+
+        color: white;
+      }
+
+      .approve {
+        background: #16a34a;
+      }
+
+      .reject {
+        background: #ef4444;
+      }
+
+      .approve:hover {
+        background: #15803d;
+      }
+
+      .reject:hover {
+        background: #dc2626;
+      }
+
+      .empty {
+        text-align: center;
+
+        padding: 40px;
+
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <h1>
+        <i class="fas fa-store"></i>
+
+        Manage Sellers
+      </h1>
+
+      <button class="back" onclick="back()">
+        <i class="fas fa-arrow-left"></i>
+
+        Dashboard
+      </button>
+    </div>
+
+    <div class="container">
+      <h2 class="title">Seller Accounts</h2>
+
+      <div class="search-box">
+        <input
+          id="search"
+          placeholder="Search seller name or shop..."
+          onkeyup="searchSeller()"
+        />
+      </div>
+
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+
+              <th>Shop Name</th>
+
+              <th>Owner</th>
+
+              <th>Email</th>
+
+              <th>Phone</th>
+
+              <th>City</th>
+
+              <th>Status</th>
+
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="sellerList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="admin-sellers.js"></script>
+  </body>
+</html>

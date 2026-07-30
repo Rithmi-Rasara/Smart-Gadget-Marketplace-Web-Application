@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Order Details</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: "Segoe UI";
+      }
+
+      body {
+        background: #0a0f1f;
+        color: white;
+      }
+
+      .header {
+        background: #050816;
+
+        padding: 20px;
+
+        display: flex;
+
+        justify-content: space-between;
+      }
+
+      h1 {
+        color: #4da8ff;
+      }
+
+      .container {
+        padding: 40px;
+      }
+
+      .order-box {
+        background: #111827;
+
+        padding: 25px;
+
+        border-radius: 15px;
+
+        border: 1px solid #1e293b;
+      }
+
+      .product {
+        background: #1f2937;
+
+        padding: 20px;
+
+        border-radius: 10px;
+
+        margin: 15px 0;
+      }
+
+      .price {
+        color: #4da8ff;
+
+        font-size: 20px;
+      }
+
+      button {
+        background: #4da8ff;
+
+        color: white;
+
+        border: none;
+
+        padding: 10px 20px;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <h1>
+        <i class="fas fa-file-invoice"></i>
+
+        Order Details
+      </h1>
+
+      <button onclick="back()">Back</button>
+    </div>
+
+    <div class="container">
+      <div id="details"></div>
+    </div>
+
+    <script src="js/order-details.js"></script>
+  </body>
+</html>

@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>My Products | Seller Panel</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: #0a0f1f;
+        color: white;
+
+        display: flex;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        width: 260px;
+        height: 100vh;
+
+        background: #050816;
+
+        position: fixed;
+
+        padding: 25px 20px;
+
+        border-right: 1px solid #1e293b;
+      }
+
+      .logo {
+        font-size: 24px;
+        color: #4da8ff;
+        margin-bottom: 40px;
+      }
+
+      .logo i {
+        margin-right: 10px;
+      }
+
+      .menu a {
+        display: flex;
+
+        align-items: center;
+
+        gap: 15px;
+
+        padding: 15px;
+
+        margin-bottom: 10px;
+
+        color: #cbd5e1;
+
+        text-decoration: none;
+
+        border-radius: 10px;
+      }
+
+      .menu a:hover,
+      .menu .active {
+        background: #1e293b;
+
+        color: #4da8ff;
+      }
+
+      .logout {
+        position: absolute;
+
+        bottom: 30px;
+
+        width: 220px;
+
+        padding: 12px;
+
+        background: #111827;
+
+        border: 1px solid #4da8ff;
+
+        color: #4da8ff;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+      }
+
+      .logout:hover {
+        background: #4da8ff;
+
+        color: white;
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 260px;
+
+        width: calc(100% - 260px);
+
+        padding: 40px;
+      }
+
+      .header {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        color: #4da8ff;
+      }
+
+      .add-btn {
+        background: #4da8ff;
+
+        border: none;
+
+        padding: 14px 22px;
+
+        border-radius: 10px;
+
+        color: white;
+
+        cursor: pointer;
+
+        font-size: 15px;
+      }
+
+      .add-btn:hover {
+        background: #2563eb;
+      }
+
+      /* TABLE */
+
+      .table-box {
+        background: #111827;
+
+        border: 1px solid #1e293b;
+
+        border-radius: 15px;
+
+        overflow: hidden;
+
+        box-shadow: 0 0 25px rgba(77, 168, 255, 0.15);
+      }
+
+      table {
+        width: 100%;
+
+        border-collapse: collapse;
+      }
+
+      th {
+        background: #050816;
+
+        color: #4da8ff;
+
+        padding: 18px;
+
+        text-align: left;
+      }
+
+      td {
+        padding: 16px;
+
+        border-bottom: 1px solid #1e293b;
+
+        color: #cbd5e1;
+      }
+
+      tr:hover {
+        background: #1e293b;
+      }
+
+      .status {
+        color: #22c55e;
+
+        font-weight: bold;
+      }
+
+      .action button {
+        padding: 8px 14px;
+
+        border: none;
+
+        border-radius: 7px;
+
+        cursor: pointer;
+
+        color: white;
+
+        margin-right: 5px;
+      }
+
+      .edit {
+        background: #16a34a;
+      }
+
+      .delete {
+        background: #dc2626;
+      }
+
+      .empty {
+        text-align: center;
+
+        padding: 30px;
+
+        color: #94a3b8;
+      }
+
+      @media (max-width: 800px) {
+        .sidebar {
+          width: 80px;
+        }
+
+        .logo span,
+        .menu span {
+          display: none;
+        }
+
+        .logout {
+          width: 45px;
+        }
+
+        .main {
+          margin-left: 80px;
+
+          width: calc(100% - 80px);
+
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+      <div class="logo">
+        <i class="fas fa-store"></i>
+
+        <span> Seller Panel </span>
+      </div>
+
+      <div class="menu">
+        <a href="seller-dashboard.html">
+          <i class="fas fa-home"></i>
+
+          <span>Dashboard</span>
+        </a>
+
+        <a href="seller-products.html" class="active">
+          <i class="fas fa-box"></i>
+
+          <span>Products</span>
+        </a>
+
+        <a href="seller-orders.html">
+          <i class="fas fa-shopping-cart"></i>
+
+          <span>Orders</span>
+        </a>
+
+        <a href="seller-profile.html">
+          <i class="fas fa-user"></i>
+
+          <span>Profile</span>
+        </a>
+      </div>
+
+      <button class="logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+
+        <span>Logout</span>
+      </button>
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main">
+      <div class="header">
+        <h1>
+          <i class="fas fa-box"></i>
+
+          My Products
+        </h1>
+
+        <button class="add-btn" onclick="addProduct()">
+          <i class="fas fa-plus"></i>
+
+          Add Product
+        </button>
+      </div>
+
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+
+              <th>Product Name</th>
+
+              <th>Price</th>
+
+              <th>Stock</th>
+
+              <th>Status</th>
+
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="productTable">
+            <tr>
+              <td colspan="6" class="empty">Loading Products...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="seller-products.js"></script>
+
+    <script>
+      function logout() {
+        localStorage.removeItem("user");
+
+        window.location.href = "../login.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Edit Product</title>
+
+    <style>
+      body {
+        background: #0a0f1f;
+        color: white;
+        font-family: Segoe UI;
+        padding: 40px;
+      }
+
+      .box {
+        background: #111827;
+        padding: 30px;
+        border-radius: 15px;
+        width: 400px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        background: #1f2937;
+        border: none;
+        color: white;
+        border-radius: 8px;
+      }
+
+      button {
+        background: #4da8ff;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="box">
+      <h2>Edit Product</h2>
+
+      <input id="name" placeholder="Product Name" />
+
+      <textarea id="description" placeholder="Description"></textarea>
+
+      <input id="price" placeholder="Price" />
+
+      <input id="stock" placeholder="Stock" />
+
+      <button type="button" onclick="updateProduct()">Update</button>
+    </div>
+
+    <script src="edit-product.js"></script>
+  </body>
+</html>

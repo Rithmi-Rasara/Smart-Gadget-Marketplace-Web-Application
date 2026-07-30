@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Admin Reports</title>
+
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+<style>
+
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+
+}
+
+
+
+body{
+
+background:#0A0F1F;
+color:white;
+
+}
+
+
+
+
+.header{
+
+background:#050816;
+
+padding:20px 40px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+border-bottom:1px solid #1E293B;
+
+}
+
+
+
+.header h1{
+
+color:#4DA8FF;
+
+}
+
+
+
+.back{
+
+background:#1F2937;
+
+color:#4DA8FF;
+
+border:1px solid #4DA8FF;
+
+padding:10px 25px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+
+
+.back:hover{
+
+background:#4DA8FF;
+
+color:white;
+
+}
+
+
+
+
+
+.container{
+
+padding:40px;
+
+}
+
+
+
+
+.title{
+
+font-size:28px;
+
+color:#4DA8FF;
+
+margin-bottom:30px;
+
+}
+
+
+
+
+
+.cards{
+
+display:grid;
+
+grid-template-columns:repeat(4,1fr);
+
+gap:20px;
+
+}
+
+
+
+
+
+.card{
+
+
+background:#111827;
+
+padding:25px;
+
+border-radius:15px;
+
+border:1px solid #1E293B;
+
+box-shadow:0 0 20px rgba(77,168,255,.15);
+
+}
+
+
+
+.card i{
+
+font-size:35px;
+
+color:#4DA8FF;
+
+margin-bottom:15px;
+
+}
+
+
+
+.card h3{
+
+color:#94a3b8;
+
+font-size:16px;
+
+}
+
+
+
+.card p{
+
+font-size:28px;
+
+margin-top:10px;
+
+color:white;
+
+}
+
+
+
+
+
+
+.report-box{
+
+margin-top:40px;
+
+background:#111827;
+
+padding:30px;
+
+border-radius:15px;
+
+border:1px solid #1E293B;
+
+}
+
+
+
+
+.report-box h2{
+
+color:#4DA8FF;
+
+margin-bottom:25px;
+
+}
+
+
+
+
+
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+
+
+th{
+
+background:#050816;
+
+color:#4DA8FF;
+
+padding:15px;
+
+text-align:left;
+
+}
+
+
+
+td{
+
+padding:15px;
+
+border-bottom:1px solid #1E293B;
+
+}
+
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<div class="header">
+
+
+<h1>
+
+<i class="fas fa-chart-line"></i>
+
+Admin Reports
+
+</h1>
+
+
+
+<button class="back"
+onclick="back()">
+
+
+<i class="fas fa-arrow-left"></i>
+
+Dashboard
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+<div class="container">
+
+
+<h2 class="title">
+
+System Overview
+
+</h2>
+
+
+
+<div class="cards">
+
+
+
+<div class="card">
+
+<i class="fas fa-users"></i>
+
+<h3>
+
+Customers
+
+</h3>
+
+<p id="customers">
+
+0
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+<i class="fas fa-store"></i>
+
+<h3>
+
+Sellers
+
+</h3>
+
+<p id="sellers">
+
+0
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+<i class="fas fa-box"></i>
+
+<h3>
+
+Products
+
+</h3>
+
+<p id="products">
+
+0
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+<i class="fas fa-shopping-cart"></i>
+
+<h3>
+
+Orders
+
+</h3>
+
+<p id="orders">
+
+0
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="report-box">
+
+
+<h2>
+
+Top Selling Products
+
+</h2>
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+Product
+</th>
+
+
+<th>
+Quantity Sold
+</th>
+
+
+<th>
+Revenue
+</th>
+
+
+</tr>
+
+</thead>
+
+
+
+<tbody id="salesTable">
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="report-box">
+
+
+<h2>
+
+Total Revenue
+
+</h2>
+
+
+<h1 id="revenue">
+
+Rs. 0
+
+</h1>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+<script src="admin-reports.js"></script>
+
+
+</body>
+
+</html>

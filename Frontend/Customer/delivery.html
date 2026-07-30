@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>Delivery Tracking | Smart Gadget Marketplace</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: #0a0f1f;
+        color: white;
+      }
+
+      .header {
+        background: #050816;
+
+        padding: 20px;
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        border-bottom: 1px solid #1e293b;
+      }
+
+      .header h1 {
+        color: #4da8ff;
+      }
+
+      button {
+        background: #4da8ff;
+
+        color: white;
+
+        border: none;
+
+        padding: 12px 20px;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+      }
+
+      .container {
+        padding: 40px;
+      }
+
+      .delivery-box {
+        background: #111827;
+
+        border: 1px solid #1e293b;
+
+        padding: 25px;
+
+        border-radius: 15px;
+
+        margin-bottom: 20px;
+      }
+
+      .delivery-box h2 {
+        color: #4da8ff;
+
+        margin-bottom: 15px;
+      }
+
+      .status {
+        font-size: 18px;
+
+        color: #22c55e;
+
+        margin-top: 15px;
+      }
+
+      .info {
+        margin-top: 10px;
+
+        color: #ccc;
+      }
+
+      .empty {
+        text-align: center;
+
+        color: #aaa;
+
+        font-size: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <h1>
+        <i class="fas fa-truck"></i>
+
+        My Deliveries
+      </h1>
+
+      <button onclick="backOrders()">Orders</button>
+    </div>
+
+    <div class="container">
+      <div id="deliveryList"></div>
+    </div>
+
+    <script src="js/delivery.js"></script>
+  </body>
+</html>

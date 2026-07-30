@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>Seller Dashboard | Smart Gadget Marketplace</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: #0a0f1f;
+        color: white;
+        display: flex;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        width: 260px;
+        height: 100vh;
+
+        background: #050816;
+
+        border-right: 1px solid #1e293b;
+
+        position: fixed;
+
+        padding: 25px 20px;
+      }
+
+      .logo {
+        font-size: 24px;
+
+        color: #4da8ff;
+
+        margin-bottom: 40px;
+      }
+
+      .logo i {
+        margin-right: 10px;
+      }
+
+      .menu a {
+        display: flex;
+
+        align-items: center;
+
+        gap: 15px;
+
+        text-decoration: none;
+
+        color: #cbd5e1;
+
+        padding: 15px;
+
+        margin-bottom: 10px;
+
+        border-radius: 10px;
+
+        transition: 0.3s;
+      }
+
+      .menu a:hover,
+      .menu a.active {
+        background: #1e293b;
+
+        color: #4da8ff;
+      }
+
+      .menu i {
+        width: 25px;
+      }
+
+      .logout {
+        position: absolute;
+
+        bottom: 30px;
+
+        width: 220px;
+
+        background: #111827;
+
+        border: 1px solid #4da8ff;
+
+        color: #4da8ff;
+
+        padding: 12px;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+      }
+
+      .logout:hover {
+        background: #4da8ff;
+
+        color: white;
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 260px;
+
+        width: calc(100% - 260px);
+      }
+
+      .header {
+        background: #050816;
+
+        padding: 25px 40px;
+
+        border-bottom: 1px solid #1e293b;
+      }
+
+      .header h1 {
+        color: #4da8ff;
+      }
+
+      .container {
+        padding: 40px;
+
+        display: grid;
+
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+        gap: 25px;
+      }
+
+      .card {
+        background: #111827;
+
+        border: 1px solid #1e293b;
+
+        border-radius: 15px;
+
+        padding: 30px;
+
+        transition: 0.3s;
+
+        box-shadow: 0 0 20px rgba(77, 168, 255, 0.15);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+
+        box-shadow: 0 0 30px rgba(77, 168, 255, 0.3);
+      }
+
+      .icon {
+        font-size: 45px;
+
+        color: #4da8ff;
+
+        margin-bottom: 20px;
+      }
+
+      .card h2 {
+        color: #4da8ff;
+
+        margin-bottom: 15px;
+      }
+
+      .card p {
+        color: #cbd5e1;
+      }
+
+      .card button {
+        margin-top: 20px;
+
+        width: 100%;
+
+        padding: 12px;
+
+        background: #4da8ff;
+
+        border: none;
+
+        border-radius: 8px;
+
+        color: white;
+
+        cursor: pointer;
+      }
+
+      .card button:hover {
+        background: #2563eb;
+      }
+
+      .footer {
+        text-align: center;
+
+        color: #64748b;
+
+        margin: 30px;
+      }
+
+      @media (max-width: 800px) {
+        .sidebar {
+          width: 80px;
+        }
+
+        .logo span,
+        .menu span {
+          display: none;
+        }
+
+        .logout {
+          width: 45px;
+        }
+
+        .main {
+          margin-left: 80px;
+
+          width: calc(100% - 80px);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+      <div class="logo">
+        <i class="fas fa-store"></i>
+
+        <span> Seller Panel </span>
+      </div>
+
+      <div class="menu">
+        <a href="seller-dashboard.html" class="active">
+          <i class="fas fa-home"></i>
+
+          <span> Dashboard </span>
+        </a>
+
+        <a href="seller-products.html">
+          <i class="fas fa-box"></i>
+
+          <span> Products </span>
+        </a>
+
+        <a href="seller-orders.html">
+          <i class="fas fa-shopping-cart"></i>
+
+          <span> Orders </span>
+        </a>
+
+        <a href="seller-profile.html">
+          <i class="fas fa-user"></i>
+
+          <span> Profile </span>
+        </a>
+      </div>
+
+      <button class="logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+
+        <span> Logout </span>
+      </button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main">
+      <div class="header">
+        <h1>
+          <i class="fas fa-chart-line"></i>
+
+          Seller Dashboard
+        </h1>
+      </div>
+
+      <div class="container">
+        <div class="card">
+          <div class="icon">
+            <i class="fas fa-box"></i>
+          </div>
+
+          <h2>Products</h2>
+
+          <p>
+            Total Products :
+
+            <span id="totalProducts"> 0 </span>
+          </p>
+
+          <button onclick="location.href = 'seller-products.html'">
+            Manage Products
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+
+          <h2>Orders</h2>
+
+          <p>
+            Total Orders :
+
+            <span id="totalOrders"> 0 </span>
+          </p>
+
+          <button onclick="location.href = 'seller-orders.html'">
+            View Orders
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+
+          <h2>Revenue</h2>
+
+          <p>
+            Total Revenue : Rs.
+
+            <span id="totalSales"> 0 </span>
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="icon">
+            <i class="fas fa-user-circle"></i>
+          </div>
+
+          <h2>Shop Profile</h2>
+
+          <p>Manage seller information.</p>
+
+          <button onclick="location.href = 'seller-profile.html'">
+            Open Profile
+          </button>
+        </div>
+      </div>
+
+      <div class="footer">Smart Gadget Marketplace © 2026</div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        loadDashboard();
+      });
+
+      async function loadDashboard() {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user) {
+          window.location.href = "../login.html";
+
+          return;
+        }
+
+        const seller_id = user.SELLER_ID;
+
+        try {
+          const response = await fetch(
+            "http://localhost:3000/api/seller/dashboard/" + seller_id,
+          );
+
+          const data = await response.json();
+
+          document.getElementById("totalProducts").innerHTML =
+            data.TOTAL_PRODUCTS;
+
+          document.getElementById("totalOrders").innerHTML = data.TOTAL_ORDERS;
+
+          document.getElementById("totalSales").innerHTML = data.TOTAL_SALES;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("user");
+
+        window.location.href = "../login.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>Seller Sales Report | Smart Gadget Marketplace</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: #0a0f1f;
+        color: white;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        position: fixed;
+
+        width: 260px;
+
+        height: 100vh;
+
+        background: #050816;
+
+        border-right: 1px solid #1e293b;
+
+        padding: 25px 20px;
+      }
+
+      .logo {
+        font-size: 24px;
+
+        font-weight: bold;
+
+        color: #4da8ff;
+
+        margin-bottom: 40px;
+      }
+
+      .logo i {
+        margin-right: 10px;
+      }
+
+      .menu {
+        list-style: none;
+      }
+
+      .menu li {
+        margin: 15px 0;
+      }
+
+      .menu a {
+        text-decoration: none;
+
+        color: #cbd5e1;
+
+        display: flex;
+
+        gap: 15px;
+
+        padding: 14px;
+
+        border-radius: 10px;
+      }
+
+      .menu a:hover,
+      .active {
+        background: #1e293b;
+
+        color: #4da8ff !important;
+      }
+
+      .logout {
+        position: absolute;
+
+        bottom: 30px;
+
+        width: 220px;
+
+        padding: 12px;
+
+        background: #111827;
+
+        border: 1px solid #4da8ff;
+
+        color: #4da8ff;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 260px;
+      }
+
+      .header {
+        height: 80px;
+
+        background: #050816;
+
+        border-bottom: 1px solid #1e293b;
+
+        padding: 20px 40px;
+      }
+
+      .header h1 {
+        color: #4da8ff;
+      }
+
+      /* CONTENT */
+
+      .content {
+        padding: 40px;
+      }
+
+      /* CARDS */
+
+      .cards {
+        display: grid;
+
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+        gap: 25px;
+      }
+
+      .card {
+        background: #111827;
+
+        border: 1px solid #1e293b;
+
+        border-radius: 15px;
+
+        padding: 25px;
+      }
+
+      .card i {
+        font-size: 35px;
+
+        color: #4da8ff;
+
+        margin-bottom: 15px;
+      }
+
+      .card h2 {
+        color: #4da8ff;
+      }
+
+      .value {
+        font-size: 28px;
+
+        font-weight: bold;
+
+        margin-top: 10px;
+      }
+
+      /* TABLE */
+
+      .box {
+        margin-top: 35px;
+
+        background: #111827;
+
+        border: 1px solid #1e293b;
+
+        border-radius: 15px;
+
+        padding: 25px;
+      }
+
+      .box h2 {
+        color: #4da8ff;
+
+        margin-bottom: 20px;
+      }
+
+      table {
+        width: 100%;
+
+        border-collapse: collapse;
+      }
+
+      th {
+        background: #050816;
+
+        color: #4da8ff;
+
+        padding: 15px;
+
+        text-align: left;
+      }
+
+      td {
+        padding: 15px;
+
+        border-bottom: 1px solid #1e293b;
+
+        color: #cbd5e1;
+      }
+
+      .status {
+        padding: 6px 12px;
+
+        border-radius: 20px;
+
+        background: #065f46;
+
+        color: white;
+      }
+
+      .footer {
+        text-align: center;
+
+        color: #64748b;
+
+        padding: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+      <div class="logo">
+        <i class="fas fa-store"></i>
+        Seller Panel
+      </div>
+
+      <ul class="menu">
+        <li>
+          <a href="seller-dashboard.html">
+            <i class="fas fa-home"></i>
+            Dashboard
+          </a>
+        </li>
+
+        <li>
+          <a href="seller-products.html">
+            <i class="fas fa-box"></i>
+            Products
+          </a>
+        </li>
+
+        <li>
+          <a href="seller-orders.html">
+            <i class="fas fa-shopping-cart"></i>
+            Orders
+          </a>
+        </li>
+
+        <li>
+          <a class="active" href="seller-sales.html">
+            <i class="fas fa-chart-line"></i>
+            Sales Reports
+          </a>
+        </li>
+
+        <li>
+          <a href="seller-profile.html">
+            <i class="fas fa-user"></i>
+            Profile
+          </a>
+        </li>
+      </ul>
+
+      <button class="logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        Logout
+      </button>
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main">
+      <div class="header">
+        <h1>Sales Reports</h1>
+      </div>
+
+      <div class="content">
+        <div class="cards">
+          <div class="card">
+            <i class="fas fa-money-bill"></i>
+
+            <h2>Total Sales</h2>
+
+            <div class="value">Rs. <span id="totalSales"> 0 </span></div>
+          </div>
+
+          <div class="card">
+            <i class="fas fa-shopping-cart"></i>
+
+            <h2>Total Orders</h2>
+
+            <div class="value" id="totalOrders">0</div>
+          </div>
+
+          <div class="card">
+            <i class="fas fa-check-circle"></i>
+
+            <h2>Completed</h2>
+
+            <div class="value" id="completedOrders">0</div>
+          </div>
+
+          <div class="card">
+            <i class="fas fa-clock"></i>
+
+            <h2>Pending</h2>
+
+            <div class="value" id="pendingOrders">0</div>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>Monthly Sales</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+
+                <th>Orders</th>
+
+                <th>Sales Amount</th>
+              </tr>
+            </thead>
+
+            <tbody id="monthlySales">
+              <tr>
+                <td>July 2026</td>
+
+                <td>0</td>
+
+                <td>Rs. 0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="box">
+          <h2>Recent Sales</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+
+                <th>Customer</th>
+
+                <th>Amount</th>
+
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody id="salesTable">
+              <tr>
+                <td>#1001</td>
+
+                <td>Kasun</td>
+
+                <td>Rs. 50000</td>
+
+                <td>
+                  <span class="status"> Completed </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="footer">Smart Gadget Marketplace © 2026</div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        loadReports();
+      });
+
+      async function loadReports() {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user) {
+          location.href = "../login.html";
+
+          return;
+        }
+
+        const seller_id = user.SELLER_ID;
+
+        try {
+          const response = await fetch(
+            "http://localhost:3000/api/seller/reports/" + seller_id,
+          );
+
+          const data = await response.json();
+
+          document.getElementById("totalSales").innerHTML = data.TOTAL_SALES;
+
+          document.getElementById("totalOrders").innerHTML = data.TOTAL_ORDERS;
+
+          document.getElementById("completedOrders").innerHTML = data.COMPLETED;
+
+          document.getElementById("pendingOrders").innerHTML = data.PENDING;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("user");
+
+        location.href = "../login.html";
+      }
+    </script>
+  </body>
+</html>

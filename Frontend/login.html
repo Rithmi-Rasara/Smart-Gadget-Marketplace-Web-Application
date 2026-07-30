@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Smart Gadget Marketplace</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: #0a0f1f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background:
+          linear-gradient(rgba(5, 8, 22, 0.8), rgba(10, 15, 31, 0.9)),
+          url("https://images.unsplash.com/photo-1518770660439-4636190af475");
+        background-size: cover;
+        background-position: center;
+      }
+
+      .login-box {
+        width: 400px;
+        background: #111827;
+        border: 1px solid #1e293b;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 0 25px rgba(77, 168, 255, 0.25);
+      }
+
+      .login-box h2 {
+        text-align: center;
+        color: #4da8ff;
+        margin-bottom: 30px;
+      }
+
+      .input-box {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .input-box i {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        color: #4da8ff;
+      }
+
+      .input-box input {
+        width: 100%;
+        padding: 14px 14px 14px 45px;
+        border: none;
+        outline: none;
+        border-radius: 8px;
+        background: #1f2937;
+        color: white;
+      }
+
+      .input-box input::placeholder {
+        color: #bbb;
+      }
+
+      .remember {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+
+      .remember a {
+        color: #4da8ff;
+        text-decoration: none;
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        background: #4da8ff;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .login-btn:hover {
+        background: #2563eb;
+      }
+
+      .signup {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .signup a {
+        color: #4da8ff;
+        text-decoration: none;
+      }
+
+      @media (max-width: 500px) {
+        .login-box {
+          width: 90%;
+          padding: 30px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="login-box">
+      <h2>
+        <i class="fas fa-user-circle"></i>
+        Login
+      </h2>
+
+      <form onsubmit="loginUser(event)">
+        <div class="input-box">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" placeholder="Username" required />
+        </div>
+
+        <div class="input-box">
+          <i class="fas fa-lock"></i>
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+
+      <div class="signup">
+        Don't have an account?
+        <a href="#">Register</a>
+      </div>
+    </div>
+
+    <script>
+      async function loginUser(event) {
+        event.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const response = await fetch("http://localhost:3000/api/login", {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              username,
+              password,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (!result.success) {
+            alert(result.message);
+            return;
+          }
+
+          // Save logged in user
+          localStorage.setItem("user", JSON.stringify(result.user));
+
+          localStorage.setItem("user_id", result.user.USER_ID);
+          localStorage.setItem("username", result.user.USERNAME);
+          localStorage.setItem("role", result.user.ROLE);
+
+          if (result.user.CUSTOMER_ID) {
+            localStorage.setItem("customer_id", result.user.CUSTOMER_ID);
+          }
+
+          if (result.user.SELLER_ID) {
+            localStorage.setItem("seller_id", result.user.SELLER_ID);
+          }
+
+          // Redirect
+
+          switch (result.user.ROLE) {
+            case "ADMIN":
+              window.location.href = "Admin/admin_dashboard.html";
+              break;
+
+            case "CUSTOMER":
+              window.location.href = "Customer/customer-dashboard.html";
+              break;
+
+            case "SELLER":
+              window.location.href = "Seller/seller-dashboard.html";
+              break;
+
+            default:
+              alert("Invalid User Role");
+          }
+        } catch (error) {
+          console.log(error);
+
+          alert("Login Failed");
+        }
+      }
+    </script>
+  </body>
+</html>
