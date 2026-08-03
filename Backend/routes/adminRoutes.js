@@ -1,3 +1,8 @@
+const express = require("express");
+const router = express.Router();
+const oracledb = require("oracledb");
+const { getOracle } = require("../config/oracle");
+
 router.get("/orders/:id", async (req, res) => {
   console.log("ORDER DETAILS ROUTE HIT");
 
@@ -142,3 +147,5 @@ WHERE ORDER_ID = :id
     }
   }
 });
+
+module.exports = router;

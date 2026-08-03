@@ -1,5 +1,4 @@
 const express = require("express");
-
 const router = express.Router();
 
 const oracledb = require("oracledb");
@@ -58,7 +57,6 @@ router.post("/create", async (req, res) => {
       });
     }
 
-    // Check Stock & Calculate Total
     let total_amount = 0;
 
     for (const item of cart.rows) {
@@ -72,7 +70,6 @@ router.post("/create", async (req, res) => {
       total_amount += item.PRICE * item.QUANTITY;
     }
 
-    // Create Order
     const order = await connection.execute(
       `
             INSERT INTO orders
