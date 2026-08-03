@@ -1,76 +1,45 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-    loadDashboard();
-    loadRecentOrders();
-
+  loadDashboard();
+  loadRecentOrders();
 });
 
-// ===============================
-// DASHBOARD
-// ===============================
-
 async function loadDashboard() {
+  try {
+    const response = await fetch("http://localhost:3000/api/admin/dashboard");
 
-    try {
+    const data = await response.json();
 
-        const response = await fetch(
-            "http://localhost:3000/api/admin/dashboard"
-        );
+    document.getElementById("products").innerHTML = data.TOTAL_PRODUCTS;
 
-        const data = await response.json();
+    document.getElementById("customers").innerHTML = data.TOTAL_CUSTOMERS;
 
-        document.getElementById("products").innerHTML =
-            data.TOTAL_PRODUCTS;
+    document.getElementById("orders").innerHTML = data.TOTAL_ORDERS;
 
-        document.getElementById("customers").innerHTML =
-            data.TOTAL_CUSTOMERS;
-
-        document.getElementById("orders").innerHTML =
-            data.TOTAL_ORDERS;
-
-        document.getElementById("revenue").innerHTML =
-            "Rs. " + data.TOTAL_REVENUE;
-
-    }
-    catch (error) {
-
-        console.log(error);
-
-    }
-
+    document.getElementById("revenue").innerHTML = "Rs. " + data.TOTAL_REVENUE;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-// ===============================
-// RECENT ORDERS
-// ===============================
-
 async function loadRecentOrders() {
+  try {
+    const response = await fetch("http://localhost:3000/api/admin/orders");
 
-    try {
+    const orders = await response.json();
 
-        const response = await fetch(
-            "http://localhost:3000/api/admin/orders"
-        );
+    let html = "";
 
-        const orders = await response.json();
-
-        let html = "";
-
-        if (orders.length === 0) {
-
-            html = `
+    if (orders.length === 0) {
+      html = `
             <tr>
                 <td colspan="4" style="text-align:center;">
                     No Orders Found
                 </td>
             </tr>
             `;
-
-        } else {
-
-            orders.slice(0,5).forEach(order => {
-
-                html += `
+    } else {
+      orders.slice(0, 5).forEach((order) => {
+        html += `
                 <tr>
 
                     <td>#${order.ORDER_ID}</td>
@@ -83,30 +52,17 @@ async function loadRecentOrders() {
 
                 </tr>
                 `;
-
-            });
-
-        }
-
-        document.getElementById("orderTable").innerHTML = html;
-
-    }
-    catch (error) {
-
-        console.log(error);
-
+      });
     }
 
+    document.getElementById("orderTable").innerHTML = html;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-// ===============================
-// LOGOUT
-// ===============================
-
 function logout() {
+  localStorage.removeItem("user");
 
-    localStorage.removeItem("user");
-
-    window.location.href = "../login.html";
-
+  window.location.href = "../login.html";
 }

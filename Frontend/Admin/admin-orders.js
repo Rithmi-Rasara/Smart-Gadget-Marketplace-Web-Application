@@ -1,77 +1,32 @@
 console.log("admin orders loaded");
 
+let orders = [];
 
-let orders=[];
-
-
-
-document.addEventListener(
-"DOMContentLoaded",
-()=>{
-
-loadOrders();
-
+document.addEventListener("DOMContentLoaded", () => {
+  loadOrders();
 });
 
-async function loadOrders(){
+async function loadOrders() {
+  try {
+    const response = await fetch("http://localhost:3000/api/admin/orders");
 
+    orders = await response.json();
 
-try{
+    displayOrders(orders);
+  } catch (error) {
+    console.log(error);
 
-
-const response = await fetch(
-
-"http://localhost:3000/api/admin/orders"
-
-);
-
-
-
-orders = await response.json();
-
-
-
-displayOrders(orders);
-
-
-
+    alert("Orders Load Failed");
+  }
 }
 
+function displayOrders(data) {
+  const table = document.getElementById("orderList");
 
+  table.innerHTML = "";
 
-catch(error){
-
-
-console.log(error);
-
-
-alert("Orders Load Failed");
-
-
-}
-
-
-
-}
-
-function displayOrders(data){
-
-
-const table =
-document.getElementById("orderList");
-
-
-
-table.innerHTML="";
-
-
-
-
-
-if(data.length===0){
-
-
-table.innerHTML=`
+  if (data.length === 0) {
+    table.innerHTML = `
 
 <tr>
 
@@ -85,33 +40,23 @@ No Orders Found
 
 `;
 
+    return;
+  }
 
-return;
+  data.forEach((order) => {
+    let orderClass = "pending";
 
-}
+    if (order.ORDER_STATUS === "COMPLETED") {
+      orderClass = "completed";
+    }
 
-data.forEach(order=>{
+    if (order.ORDER_STATUS === "CANCELLED") {
+      orderClass = "cancelled";
+    }
 
-let orderClass="pending";
+    let delivery = order.DELIVERY_STATUS || "PENDING";
 
-if(order.ORDER_STATUS==="COMPLETED"){
-
-orderClass="completed";
-
-}
-
-
-if(order.ORDER_STATUS==="CANCELLED"){
-
-orderClass="cancelled";
-
-}
-
-
-let delivery =
-order.DELIVERY_STATUS || "PENDING";
-
-table.innerHTML += `
+    table.innerHTML += `
 
 <tr>
 
@@ -129,8 +74,7 @@ ${order.CUSTOMER_NAME}
 
 <td>
 
-${new Date(order.ORDER_DATE)
-.toLocaleDateString()}
+${new Date(order.ORDER_DATE).toLocaleDateString()}
 
 </td>
 
@@ -159,89 +103,30 @@ ${delivery}
 </td>
 
 
-<td>
-
-
-<button class="view"
-
-onclick="viewOrder(${order.ORDER_ID})">
-
-
-<i class="fas fa-eye"></i>
-
-View
-
-</button>
-
-
-</td>
 
 </tr>
 
 
 `;
-
-
-
-});
-
-
-
+  });
 }
 
+function searchOrder() {
+  const value = document.getElementById("search").value.toLowerCase();
 
-function searchOrder(){
+  const filtered = orders.filter(
+    (order) =>
+      String(order.ORDER_ID).includes(value) ||
+      order.CUSTOMER_NAME.toLowerCase().includes(value),
+  );
 
-
-const value =
-
-document.getElementById("search")
-.value
-.toLowerCase();
-
-
-
-
-const filtered = orders.filter(order=>
-
-
-String(order.ORDER_ID)
-.includes(value)
-
-
-||
-
-order.CUSTOMER_NAME
-.toLowerCase()
-.includes(value)
-
-
-
-);
-
-
-
-displayOrders(filtered);
-
-
-
+  displayOrders(filtered);
 }
 
-
-function viewOrder(id){
-
-
-
-window.location.href=
-
-"admin-order-details.html?id="+id;
-
+function viewOrder(id) {
+  window.location.href = "admin-order-details.html?id=" + id;
 }
 
-function back(){
-
-
-window.location.href="admin-dashboard.html";
-
-
+function back() {
+  window.location.href = "admin-dashboard.html";
 }

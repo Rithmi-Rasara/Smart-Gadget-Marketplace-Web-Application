@@ -21,6 +21,8 @@ async function loadDashboard() {
 
     const data = await response.json();
 
+    console.log(data);
+
     console.log("Dashboard Data:", data);
 
     if (data.success === false) {
@@ -34,7 +36,7 @@ async function loadDashboard() {
     document.getElementById("orderCount").innerHTML = data.orders || 0;
 
     document.getElementById("spentAmount").innerHTML =
-      "Rs. " + (data.spent || 0);
+      "Rs. " + Number(data.spent).toFixed(2);
   } catch (error) {
     console.log("Dashboard Error :", error);
   }

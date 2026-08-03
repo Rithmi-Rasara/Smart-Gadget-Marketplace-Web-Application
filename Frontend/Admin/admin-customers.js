@@ -1,80 +1,32 @@
 console.log("admin customers loaded");
 
+let customers = [];
 
-let customers=[];
-
-
-
-document.addEventListener(
-"DOMContentLoaded",
-()=>{
-
-loadCustomers();
-
+document.addEventListener("DOMContentLoaded", () => {
+  loadCustomers();
 });
 
+async function loadCustomers() {
+  try {
+    const response = await fetch("http://localhost:3000/api/admin/customers");
 
+    customers = await response.json();
 
+    displayCustomers(customers);
+  } catch (error) {
+    console.log(error);
 
-async function loadCustomers(){
-
-
-try{
-
-
-const response = await fetch(
-
-"http://localhost:3000/api/admin/customers"
-
-);
-
-
-
-customers = await response.json();
-
-
-
-displayCustomers(customers);
-
-
-
+    alert("Customer Load Failed");
+  }
 }
 
+function displayCustomers(data) {
+  const table = document.getElementById("customerList");
 
-catch(error){
+  table.innerHTML = "";
 
-
-console.log(error);
-
-
-alert("Customer Load Failed");
-
-
-}
-
-
-
-}
-
-
-function displayCustomers(data){
-
-
-const table =
-document.getElementById("customerList");
-
-
-
-table.innerHTML="";
-
-
-
-
-
-if(data.length===0){
-
-
-table.innerHTML=`
+  if (data.length === 0) {
+    table.innerHTML = `
 
 <tr>
 
@@ -88,35 +40,17 @@ No Customers Found
 
 `;
 
+    return;
+  }
 
-return;
+  data.forEach((customer) => {
+    let statusClass = "active";
 
+    if (customer.STATUS === "INACTIVE") {
+      statusClass = "blocked";
+    }
 
-}
-
-
-
-
-
-
-data.forEach(customer=>{
-
-
-
-let statusClass="active";
-
-
-
-if(customer.STATUS==="INACTIVE"){
-
-statusClass="blocked";
-
-
-}
-
-
-
-table.innerHTML += `
+    table.innerHTML += `
 
 
 
@@ -208,134 +142,50 @@ Delete
 
 
 `;
-
-
-
-});
-
-
-
+  });
 }
 
+function searchCustomer() {
+  const value = document.getElementById("search").value.toLowerCase();
 
-function searchCustomer(){
+  const filtered = customers.filter(
+    (customer) =>
+      customer.FULL_NAME.toLowerCase().includes(value) ||
+      customer.EMAIL.toLowerCase().includes(value) ||
+      (customer.CITY || "").toLowerCase().includes(value),
+  );
 
-
-
-const value =
-
-document.getElementById("search")
-.value
-.toLowerCase();
-
-
-
-
-
-const filtered = customers.filter(customer=>
-
-
-customer.FULL_NAME
-.toLowerCase()
-.includes(value)
-
-
-||
-
-customer.EMAIL
-.toLowerCase()
-.includes(value)
-
-
-||
-
-(customer.CITY || "")
-.toLowerCase()
-.includes(value)
-
-
-
-);
-
-
-
-displayCustomers(filtered);
-
-
-
+  displayCustomers(filtered);
 }
 
-async function deleteCustomer(id){
+async function deleteCustomer(id) {
+  if (!confirm("Delete this customer?")) return;
 
+  try {
+    const response = await fetch(
+      "http://localhost:3000/api/admin/customers/" + id,
 
+      {
+        method: "DELETE",
+      },
+    );
 
-if(!confirm(
-"Delete this customer?"
-))
+    const result = await response.json();
 
-return;
+    if (result.success) {
+      alert("Customer Deleted Successfully");
 
-try{
+      loadCustomers();
+    } else {
+      alert(result.message);
+    }
+  } catch (error) {
+    console.log(error);
 
-
-const response = await fetch(
-
-
-"http://localhost:3000/api/admin/customers/"+id,
-
-
-{
-
-
-method:"DELETE"
-
-
+    alert("Delete Failed");
+  }
 }
 
-
-
-);
-
-const result =
-await response.json();
-
-if(result.success){
-
-
-alert(
-"Customer Deleted Successfully"
-);
-
-
-loadCustomers();
-
-}
-
-else{
-
-
-alert(result.message);
-
-
-}
-
-}
-
-catch(error){
-
-console.log(error);
-
-alert("Delete Failed");
-
-}
-
-
-}
-
-function back(){
-
-
-window.location.href="admin-dashboard.html";
-
-
+function back() {
+  window.location.href = "admin-dashboard.html";
 }

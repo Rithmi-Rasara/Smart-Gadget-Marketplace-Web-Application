@@ -1,74 +1,32 @@
 console.log("admin categories loaded");
 
+let categories = [];
 
-let categories=[];
-
-
-
-document.addEventListener(
-"DOMContentLoaded",
-()=>{
-
-loadCategories();
-
+document.addEventListener("DOMContentLoaded", () => {
+  loadCategories();
 });
 
+async function loadCategories() {
+  try {
+    const response = await fetch("http://localhost:3000/api/admin/categories");
 
+    categories = await response.json();
 
-async function loadCategories(){
+    displayCategories();
+  } catch (error) {
+    console.log(error);
 
-
-try{
-
-
-const response =
-await fetch(
-"http://localhost:3000/api/admin/categories"
-);
-
-
-
-categories =
-await response.json();
-
-
-
-displayCategories();
-
-
-
+    alert("Category Load Failed");
+  }
 }
 
-catch(error){
+function displayCategories() {
+  const table = document.getElementById("categoryList");
 
-console.log(error);
+  table.innerHTML = "";
 
-alert("Category Load Failed");
-
-}
-
-
-}
-
-
-
-
-
-function displayCategories(){
-
-
-const table =
-document.getElementById("categoryList");
-
-
-table.innerHTML="";
-
-
-
-categories.forEach(cat=>{
-
-
-table.innerHTML +=`
+  categories.forEach((cat) => {
+    table.innerHTML += `
 
 
 <tr>
@@ -114,141 +72,61 @@ Delete
 
 
 `;
-
-
-
-});
-
-
+  });
 }
 
-async function addCategory(){
+async function addCategory() {
+  const data = {
+    category_name: document.getElementById("category_name").value,
 
+    description: document.getElementById("description").value,
+  };
 
+  const response = await fetch(
+    "http://localhost:3000/api/admin/categories",
 
-const data={
+    {
+      method: "POST",
 
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-category_name:
-document.getElementById("category_name").value,
+      body: JSON.stringify(data),
+    },
+  );
 
+  const result = await response.json();
 
-description:
-document.getElementById("description").value
+  if (result.success) {
+    alert("Category Added");
 
-
-};
-
-
-
-const response =
-await fetch(
-
-"http://localhost:3000/api/admin/categories",
-
-{
-
-
-method:"POST",
-
-
-headers:{
-
-
-"Content-Type":"application/json"
-
-
-},
-
-
-body:JSON.stringify(data)
-
-
+    loadCategories();
+  } else {
+    alert(result.message);
+  }
 }
 
-);
+async function deleteCategory(id) {
+  if (!confirm("Delete this category?")) return;
 
+  const response = await fetch(
+    "http://localhost:3000/api/admin/categories/" + id,
 
+    {
+      method: "DELETE",
+    },
+  );
 
-const result =
-await response.json();
+  const result = await response.json();
 
+  if (result.success) {
+    alert("Deleted");
 
-
-if(result.success){
-
-
-alert("Category Added");
-
-
-loadCategories();
-
-
+    loadCategories();
+  }
 }
 
-
-
-else{
-
-
-alert(result.message);
-
-
-}
-
-
-
-}
-
-
-async function deleteCategory(id){
-
-
-if(!confirm("Delete this category?"))
-return;
-
-
-
-const response =
-await fetch(
-
-"http://localhost:3000/api/admin/categories/"+id,
-
-{
-
-method:"DELETE"
-
-}
-
-);
-
-
-
-const result =
-await response.json();
-
-
-
-if(result.success){
-
-
-alert("Deleted");
-
-
-loadCategories();
-
-
-}
-
-
-}
-
-
-
-
-
-function back(){
-
-window.location.href="admin-dashboard.html";
-
+function back() {
+  window.location.href = "admin-dashboard.html";
 }

@@ -1,8 +1,15 @@
 const order = JSON.parse(localStorage.getItem("lastOrder"));
 
+if (!order) {
+  alert("Order not found");
+
+  window.location.href = "cart.html";
+}
+
 document.getElementById("orderNo").innerHTML = "Order #" + order.order_id;
 
-document.getElementById("amount").innerHTML = "Rs. " + order.total_amount;
+document.getElementById("amount").innerHTML =
+  "Rs. " + Number(order.total_amount).toFixed(2);
 
 async function payNow() {
   const response = await fetch(
@@ -20,14 +27,20 @@ async function payNow() {
 
         payment_method: document.getElementById("method").value,
 
-        amount: order.total_amount,
+        amount: Number(order.total_amount),
       }),
     },
   );
 
   const result = await response.json();
 
+  console.log(result);
+
   alert(result.message);
 
-  window.location.href = "customer-orders.html";
+  if (result.success) {
+    localStorage.removeItem("lastOrder");
+
+    window.location.href = "customer-orders.html";
+  }
 }

@@ -1,440 +1,229 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
+    <title>Admin Orders | Smart Gadget Marketplace</title>
 
-<meta charset="UTF-8">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
 
-<title>Admin Orders | Smart Gadget Marketplace</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
 
+        box-sizing: border-box;
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        font-family: "Segoe UI", sans-serif;
+      }
 
+      body {
+        background: #0a0f1f;
+        color: white;
+      }
 
-<style>
+      .header {
+        background: #050816;
 
+        padding: 20px 40px;
 
-*{
+        display: flex;
 
-margin:0;
-padding:0;
+        justify-content: space-between;
 
-box-sizing:border-box;
+        align-items: center;
 
-font-family:'Segoe UI',sans-serif;
+        border-bottom: 1px solid #1e293b;
+      }
 
-}
+      .header h1 {
+        color: #4da8ff;
+      }
 
+      .back {
+        background: #1f2937;
 
-body{
+        color: #4da8ff;
 
-background:#0A0F1F;
-color:white;
+        border: 1px solid #4da8ff;
 
-}
+        padding: 10px 25px;
 
+        border-radius: 8px;
 
+        cursor: pointer;
+      }
 
-.header{
+      .back:hover {
+        background: #4da8ff;
 
-background:#050816;
+        color: white;
+      }
 
-padding:20px 40px;
+      .container {
+        padding: 40px;
+      }
 
-display:flex;
+      .title {
+        font-size: 30px;
 
-justify-content:space-between;
+        color: #4da8ff;
 
-align-items:center;
+        margin-bottom: 25px;
+      }
 
-border-bottom:1px solid #1E293B;
+      .search-box {
+        background: #111827;
 
-}
+        padding: 20px;
 
+        border-radius: 12px;
 
-.header h1{
+        border: 1px solid #1e293b;
 
-color:#4DA8FF;
+        margin-bottom: 25px;
+      }
 
-}
+      .search-box input {
+        width: 100%;
 
+        padding: 14px;
 
-.back{
+        background: #1f2937;
 
-background:#1F2937;
+        border: none;
 
-color:#4DA8FF;
+        border-radius: 8px;
 
-border:1px solid #4DA8FF;
+        color: white;
 
-padding:10px 25px;
+        font-size: 15px;
+      }
 
-border-radius:8px;
+      .table-box {
+        background: #111827;
 
-cursor:pointer;
+        border-radius: 15px;
 
-}
+        overflow: hidden;
 
+        border: 1px solid #1e293b;
 
+        box-shadow: 0 0 25px rgba(77, 168, 255, 0.15);
+      }
 
-.back:hover{
+      table {
+        width: 100%;
 
-background:#4DA8FF;
+        border-collapse: collapse;
+      }
 
-color:white;
+      thead {
+        background: #050816;
+      }
 
-}
+      th {
+        padding: 18px;
 
+        color: #4da8ff;
 
-.container{
+        text-align: left;
+      }
 
-padding:40px;
+      td {
+        padding: 15px;
 
-}
+        border-bottom: 1px solid #1e293b;
 
+        color: #cbd5e1;
+      }
 
+      tr:hover {
+        background: #1f2937;
+      }
 
-.title{
+      .status {
+        padding: 6px 15px;
 
-font-size:30px;
+        border-radius: 20px;
 
-color:#4DA8FF;
+        font-size: 13px;
+      }
 
-margin-bottom:25px;
+      .pending {
+        background: #f59e0b;
+      }
 
-}
+      .completed {
+        background: #22c55e;
+      }
 
+      .cancelled {
+        background: #ef4444;
+      }
 
-.search-box{
+      .empty {
+        text-align: center;
 
-background:#111827;
+        padding: 40px;
 
-padding:20px;
+        color: #94a3b8;
+      }
+    </style>
+  </head>
 
-border-radius:12px;
+  <body>
+    <div class="header">
+      <h1>
+        <i class="fas fa-shopping-cart"></i>
 
-border:1px solid #1E293B;
+        Manage Orders
+      </h1>
 
-margin-bottom:25px;
+      <button class="back" onclick="back()">
+        <i class="fas fa-arrow-left"></i>
 
-}
+        Dashboard
+      </button>
+    </div>
 
+    <div class="container">
+      <h2 class="title">Customer Orders</h2>
 
+      <div class="search-box">
+        <input
+          id="search"
+          placeholder="Search Order / Customer..."
+          onkeyup="searchOrder()"
+        />
+      </div>
 
-.search-box input{
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
 
+              <th>Customer</th>
 
-width:100%;
+              <th>Date</th>
 
-padding:14px;
+              <th>Amount</th>
 
-background:#1F2937;
+              <th>Order Status</th>
 
-border:none;
+              <th>Delivery</th>
+            </tr>
+          </thead>
 
-border-radius:8px;
+          <tbody id="orderList"></tbody>
+        </table>
+      </div>
+    </div>
 
-color:white;
-
-font-size:15px;
-
-}
-
-.table-box{
-
-
-background:#111827;
-
-border-radius:15px;
-
-overflow:hidden;
-
-border:1px solid #1E293B;
-
-box-shadow:0 0 25px rgba(77,168,255,.15);
-
-
-}
-
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-
-
-thead{
-
-background:#050816;
-
-}
-
-
-
-th{
-
-padding:18px;
-
-color:#4DA8FF;
-
-text-align:left;
-
-}
-
-
-
-td{
-
-padding:15px;
-
-border-bottom:1px solid #1E293B;
-
-color:#cbd5e1;
-
-}
-
-
-
-tr:hover{
-
-background:#1F2937;
-
-}
-
-.status{
-
-padding:6px 15px;
-
-border-radius:20px;
-
-font-size:13px;
-
-}
-
-
-
-.pending{
-
-background:#f59e0b;
-
-}
-
-
-
-.completed{
-
-background:#22c55e;
-
-}
-
-
-
-.cancelled{
-
-background:#ef4444;
-
-}
-
-.view{
-
-background:#4DA8FF;
-
-color:white;
-
-border:none;
-
-padding:8px 15px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-
-
-.view:hover{
-
-background:#2563EB;
-
-}
-
-
-
-
-.empty{
-
-text-align:center;
-
-padding:40px;
-
-color:#94a3b8;
-
-}
-
-
-
-</style>
-
-
-</head>
-
-
-
-<body>
-
-
-
-<div class="header">
-
-
-<h1>
-
-<i class="fas fa-shopping-cart"></i>
-
-Manage Orders
-
-</h1>
-
-
-
-<button class="back"
-onclick="back()">
-
-
-<i class="fas fa-arrow-left"></i>
-
-Dashboard
-
-
-</button>
-
-
-</div>
-
-
-
-
-
-
-<div class="container">
-
-
-<h2 class="title">
-
-Customer Orders
-
-</h2>
-
-
-
-
-
-<div class="search-box">
-
-
-<input
-
-id="search"
-
-placeholder="Search Order / Customer..."
-
-onkeyup="searchOrder()">
-
-
-</div>
-
-
-
-
-
-
-<div class="table-box">
-
-
-<table>
-
-
-<thead>
-
-
-<tr>
-
-
-<th>
-Order ID
-</th>
-
-
-<th>
-Customer
-</th>
-
-
-<th>
-Date
-</th>
-
-
-<th>
-Amount
-</th>
-
-
-<th>
-Order Status
-</th>
-
-
-<th>
-Delivery
-</th>
-
-
-<th>
-Action
-</th>
-
-
-</tr>
-
-
-</thead>
-
-
-
-<tbody id="orderList">
-
-
-</tbody>
-
-
-
-</table>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-<script src="admin-orders.js"></script>
-
-
-</body>
-
-
+    <script src="admin-orders.js"></script>
+  </body>
 </html>

@@ -20,94 +20,109 @@ async function loadProducts() {
       "http://localhost:3000/api/seller/products/" + seller_id,
     );
 
-    const products = await res.json();
+    const data = await res.json();
+
+    console.log("API Response:", data);
+
+    if (!res.ok) {
+      throw new Error(data.message || "Server Error");
+    }
+
+    const products = data;
 
     let html = "";
+
+    if (!Array.isArray(products)) {
+      document.getElementById("productTable").innerHTML = `
+
+            <tr>
+                <td colspan="6" class="empty">
+
+                    Invalid product data
+
+                </td>
+            </tr>
+
+            `;
+
+      return;
+    }
+
+    if (products.length === 0) {
+      document.getElementById("productTable").innerHTML = `
+
+            <tr>
+                <td colspan="6" class="empty">
+
+                    No Products Found
+
+                </td>
+            </tr>
+
+            `;
+
+      return;
+    }
 
     products.forEach((p) => {
       html += `
 
+            <tr>
 
-<tr>
+                <td>${p.PRODUCT_ID}</td>
 
+                <td>${p.PRODUCT_NAME}</td>
 
-<td>
-${p.PRODUCT_ID}
-</td>
+                <td>Rs.${p.PRICE}</td>
 
+                <td>${p.STOCK_QUANTITY}</td>
 
-
-<td>
-${p.PRODUCT_NAME}
-</td>
-
-
-
-<td>
-Rs.${p.PRICE}
-</td>
+                <td class="status">
+                    ${p.STATUS}
+                </td>
 
 
+                <td class="action">
 
-<td>
-${p.STOCK_QUANTITY}
-</td>
+                    <button class="edit"
+                    onclick="editProduct(${p.PRODUCT_ID})">
 
+                    Edit
 
-
-<td>
-${p.STATUS}
-</td>
+                    </button>
 
 
+                    <button class="delete"
+                    onclick="deleteProduct(${p.PRODUCT_ID})">
 
-<td class="action">
+                    Delete
 
-
-<button class="edit"
-
-onclick="editProduct(${p.PRODUCT_ID})">
-
-
-<i class="fas fa-edit"></i>
-
-Edit
+                    </button>
 
 
-</button>
+                </td>
 
 
+            </tr>
 
-
-
-<button class="delete"
-
-onclick="deleteProduct(${p.PRODUCT_ID})">
-
-
-<i class="fas fa-trash"></i>
-
-Delete
-
-
-</button>
-
-
-
-</td>
-
-
-</tr>
-
-
-`;
+            `;
     });
 
     document.getElementById("productTable").innerHTML = html;
   } catch (error) {
     console.log(error);
 
-    alert("Products loading failed");
+    document.getElementById("productTable").innerHTML = `
+
+        <tr>
+            <td colspan="6" class="empty">
+
+            ${error.message}
+
+            </td>
+        </tr>
+
+        `;
   }
 }
 

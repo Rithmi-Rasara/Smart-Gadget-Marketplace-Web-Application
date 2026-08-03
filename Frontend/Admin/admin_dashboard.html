@@ -1,786 +1,462 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
+    <title>Admin Dashboard | Smart Gadget Marketplace</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
 
-<title>Admin Dashboard | Smart Gadget Marketplace</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
 
+      body {
+        background: #0a0f1f;
+        color: white;
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        display: flex;
+      }
 
+      .sidebar {
+        width: 260px;
 
-<style>
+        height: 100vh;
 
+        background: #050816;
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
+        border-right: 1px solid #1e293b;
 
+        padding: 25px;
 
-body{
+        position: fixed;
+      }
 
-background:#0A0F1F;
-color:white;
+      .logo {
+        text-align: center;
 
-display:flex;
+        color: #4da8ff;
 
-}
+        font-size: 25px;
 
+        font-weight: bold;
 
+        margin-bottom: 40px;
+      }
 
-.sidebar{
+      .logo i {
+        margin-right: 10px;
+      }
 
-width:260px;
+      .menu a {
+        display: flex;
 
-height:100vh;
+        align-items: center;
 
-background:#050816;
+        gap: 15px;
 
-border-right:1px solid #1E293B;
+        padding: 15px;
 
-padding:25px;
+        margin-bottom: 10px;
 
-position:fixed;
+        text-decoration: none;
 
-}
+        color: #cbd5e1;
 
+        border-radius: 10px;
 
+        font-size: 16px;
+      }
 
-.logo{
+      .menu a:hover {
+        background: #1f2937;
 
-text-align:center;
+        color: #4da8ff;
+      }
 
-color:#4DA8FF;
+      .main {
+        margin-left: 260px;
 
-font-size:25px;
+        width: calc(100% - 260px);
 
-font-weight:bold;
+        padding: 30px;
+      }
 
-margin-bottom:40px;
+      .header {
+        display: flex;
 
-}
+        justify-content: space-between;
 
+        align-items: center;
 
-.logo i{
+        margin-bottom: 35px;
+      }
 
-margin-right:10px;
+      .header h1 {
+        color: #4da8ff;
 
-}
+        font-size: 32px;
+      }
 
+      .logout {
+        background: #ef4444;
 
+        border: none;
 
+        color: white;
 
-.menu a{
+        padding: 12px 25px;
 
-display:flex;
+        border-radius: 8px;
 
-align-items:center;
+        cursor: pointer;
+      }
 
-gap:15px;
+      .logout:hover {
+        background: #dc2626;
+      }
 
-padding:15px;
+      .cards {
+        display: grid;
 
-margin-bottom:10px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 
-text-decoration:none;
+        gap: 25px;
+      }
 
-color:#cbd5e1;
+      .card {
+        background: #111827;
 
-border-radius:10px;
+        border: 1px solid #1e293b;
 
-font-size:16px;
+        border-radius: 15px;
 
-}
+        padding: 30px;
 
+        text-align: center;
 
+        box-shadow: 0 0 20px rgba(77, 168, 255, 0.15);
 
-.menu a:hover{
+        transition: 0.3s;
+      }
 
-background:#1F2937;
+      .card:hover {
+        transform: translateY(-5px);
 
-color:#4DA8FF;
+        box-shadow: 0 0 30px rgba(77, 168, 255, 0.3);
+      }
 
-}
+      .card i {
+        font-size: 45px;
 
-.main{
+        color: #4da8ff;
 
-margin-left:260px;
+        margin-bottom: 20px;
+      }
 
-width:calc(100% - 260px);
+      .card h2 {
+        font-size: 32px;
 
-padding:30px;
+        margin-bottom: 10px;
+      }
 
-}
+      .card p {
+        color: #94a3b8;
+      }
 
+      .section-title {
+        margin: 40px 0 20px;
 
-.header{
+        color: #4da8ff;
 
-display:flex;
+        font-size: 25px;
+      }
 
-justify-content:space-between;
+      .actions {
+        display: grid;
 
-align-items:center;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 
-margin-bottom:35px;
+        gap: 25px;
+      }
 
-}
+      .action-card {
+        background: #111827;
 
+        border: 1px solid #1e293b;
 
+        padding: 25px;
 
-.header h1{
+        border-radius: 15px;
 
-color:#4DA8FF;
+        text-align: center;
+      }
 
-font-size:32px;
+      .action-card i {
+        font-size: 40px;
 
-}
+        color: #4da8ff;
+      }
 
+      .action-card h3 {
+        margin: 15px;
+      }
 
+      button {
+        background: #4da8ff;
 
-.logout{
+        border: none;
 
-background:#ef4444;
+        padding: 12px 25px;
 
-border:none;
+        border-radius: 8px;
 
-color:white;
+        color: white;
 
-padding:12px 25px;
+        cursor: pointer;
+      }
 
-border-radius:8px;
+      button:hover {
+        background: #2563eb;
+      }
 
-cursor:pointer;
+      .table-box {
+        margin-top: 40px;
 
-}
+        background: #111827;
 
+        border-radius: 15px;
 
+        padding: 25px;
 
-.logout:hover{
+        border: 1px solid #1e293b;
+      }
 
-background:#dc2626;
+      table {
+        width: 100%;
 
-}
+        border-collapse: collapse;
 
+        margin-top: 20px;
+      }
 
-.cards{
+      th {
+        background: #4da8ff;
 
-display:grid;
+        padding: 15px;
 
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+        text-align: left;
+      }
 
-gap:25px;
+      td {
+        padding: 15px;
 
-}
+        border-bottom: 1px solid #1e293b;
 
+        color: #cbd5e1;
+      }
 
+      tr:hover {
+        background: #1f2937;
+      }
 
-.card{
+      @media (max-width: 900px) {
+        .sidebar {
+          display: none;
+        }
 
+        .main {
+          margin-left: 0;
 
-background:#111827;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
 
-border:1px solid #1E293B;
+  <body>
+    <div class="sidebar">
+      <div class="logo">
+        <i class="fas fa-microchip"></i>
 
-border-radius:15px;
+        Smart Gadget
+      </div>
 
-padding:30px;
+      <div class="menu">
+        <a href="admin-dashboard.html">
+          <i class="fas fa-chart-line"></i>
 
-text-align:center;
+          Dashboard
+        </a>
 
-box-shadow:0 0 20px rgba(77,168,255,.15);
+        <a href="admin-products.html">
+          <i class="fas fa-box"></i>
 
-transition:.3s;
+          Products
+        </a>
 
+        <a href="admin-categories.html">
+          <i class="fas fa-list"></i>
 
-}
+          Categories
+        </a>
 
+        <a href="admin-orders.html">
+          <i class="fas fa-shopping-cart"></i>
 
-.card:hover{
+          Orders
+        </a>
 
-transform:translateY(-5px);
+        <a href="admin-customers.html">
+          <i class="fas fa-users"></i>
 
-box-shadow:0 0 30px rgba(77,168,255,.3);
+          Customers
+        </a>
 
-}
+        <a href="admin-reports.html">
+          <i class="fas fa-chart-bar"></i>
 
+          Reports
+        </a>
+      </div>
+    </div>
 
+    <!-- MAIN -->
 
-.card i{
+    <div class="main">
+      <div class="header">
+        <h1>
+          <i class="fas fa-user-shield"></i>
 
-font-size:45px;
+          Admin Dashboard
+        </h1>
 
-color:#4DA8FF;
+        <button class="logout" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
 
-margin-bottom:20px;
+          Logout
+        </button>
+      </div>
 
-}
+      <div class="cards">
+        <div class="card">
+          <i class="fas fa-box"></i>
 
+          <h2 id="products">0</h2>
 
+          <p>Total Products</p>
+        </div>
 
-.card h2{
+        <div class="card">
+          <i class="fas fa-users"></i>
 
-font-size:32px;
+          <h2 id="customers">0</h2>
 
-margin-bottom:10px;
+          <p>Customers</p>
+        </div>
 
-}
+        <div class="card">
+          <i class="fas fa-shopping-cart"></i>
 
+          <h2 id="orders">0</h2>
 
+          <p>Total Orders</p>
+        </div>
 
-.card p{
+        <div class="card">
+          <i class="fas fa-dollar-sign"></i>
 
-color:#94a3b8;
+          <h2 id="revenue">Rs.0</h2>
 
-}
+          <p>Total Revenue</p>
+        </div>
+      </div>
 
+      <h2 class="section-title">Quick Actions</h2>
 
-.section-title{
+      <div class="actions">
+        <div class="action-card">
+          <i class="fas fa-store"></i>
 
-margin:40px 0 20px;
+          <h3>Manage Sellers</h3>
 
-color:#4DA8FF;
+          <button onclick="location.href = 'admin-sellers.html'">Open</button>
+        </div>
 
-font-size:25px;
+        <div class="action-card">
+          <i class="fas fa-boxes"></i>
 
-}
+          <h3>Manage Products</h3>
 
+          <button onclick="location.href = 'admin-products.html'">Open</button>
+        </div>
 
+        <div class="action-card">
+          <i class="fas fa-shopping-cart"></i>
 
-.actions{
+          <h3>Manage Orders</h3>
 
-display:grid;
+          <button onclick="location.href = 'admin-orders.html'">Open</button>
+        </div>
 
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+        <div class="action-card">
+          <i class="fas fa-file-alt"></i>
 
-gap:25px;
+          <h3>Reports</h3>
 
-}
+          <button onclick="location.href = 'admin-reports.html'">Open</button>
+        </div>
+      </div>
 
+      <div class="table-box">
+        <h2>Recent Orders</h2>
 
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
 
-.action-card{
+              <th>Customer</th>
 
-background:#111827;
+              <th>Product</th>
 
-border:1px solid #1E293B;
+              <th>Status</th>
+            </tr>
+          </thead>
 
-padding:25px;
+          <tbody id="orderTable">
+            <tr>
+              <td>#1001</td>
 
-border-radius:15px;
+              <td>John</td>
 
-text-align:center;
+              <td>iPhone 15 Pro</td>
 
-}
+              <td>Pending</td>
+            </tr>
 
+            <tr>
+              <td>#1002</td>
 
+              <td>Emma</td>
 
-.action-card i{
+              <td>Gaming Laptop</td>
 
-font-size:40px;
+              <td>Delivered</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-color:#4DA8FF;
-
-}
-
-
-
-.action-card h3{
-
-margin:15px;
-
-}
-
-
-
-button{
-
-
-background:#4DA8FF;
-
-border:none;
-
-padding:12px 25px;
-
-border-radius:8px;
-
-color:white;
-
-cursor:pointer;
-
-}
-
-
-
-button:hover{
-
-background:#2563EB;
-
-}
-
-
-
-.table-box{
-
-margin-top:40px;
-
-background:#111827;
-
-border-radius:15px;
-
-padding:25px;
-
-border:1px solid #1E293B;
-
-}
-
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-margin-top:20px;
-
-}
-
-
-
-th{
-
-background:#4DA8FF;
-
-padding:15px;
-
-text-align:left;
-
-}
-
-
-
-td{
-
-padding:15px;
-
-border-bottom:1px solid #1E293B;
-
-color:#cbd5e1;
-
-}
-
-
-
-tr:hover{
-
-background:#1F2937;
-
-}
-
-
-
-
-
-@media(max-width:900px){
-
-
-.sidebar{
-
-display:none;
-
-}
-
-
-.main{
-
-margin-left:0;
-
-width:100%;
-
-}
-
-
-}
-
-
-
-</style>
-
-
-</head>
-
-
-<body>
-
-
-<div class="sidebar">
-
-
-<div class="logo">
-
-<i class="fas fa-microchip"></i>
-
-Smart Gadget
-
-</div>
-
-
-
-<div class="menu">
-
-
-<a href="admin-dashboard.html">
-
-<i class="fas fa-chart-line"></i>
-
-Dashboard
-
-</a>
-
-
-<a href="admin-products.html">
-
-<i class="fas fa-box"></i>
-
-Products
-
-</a>
-
-
-<a href="admin-categories.html">
-
-<i class="fas fa-list"></i>
-
-Categories
-
-</a>
-
-
-<a href="admin-orders.html">
-
-<i class="fas fa-shopping-cart"></i>
-
-Orders
-
-</a>
-
-
-<a href="admin-customers.html">
-
-<i class="fas fa-users"></i>
-
-Customers
-
-</a>
-
-
-<a href="admin-reports.html">
-
-<i class="fas fa-chart-bar"></i>
-
-Reports
-
-</a>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-<!-- MAIN -->
-
-
-<div class="main">
-
-
-
-<div class="header">
-
-
-<h1>
-
-<i class="fas fa-user-shield"></i>
-
-Admin Dashboard
-
-</h1>
-
-
-
-<button class="logout" onclick="logout()">
-
-<i class="fas fa-sign-out-alt"></i>
-
-Logout
-
-</button>
-
-
-</div>
-
-
-
-<div class="cards">
-
-
-
-<div class="card">
-
-<i class="fas fa-box"></i>
-
-<h2 id="products">
-
-0
-
-</h2>
-
-<p>Total Products</p>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<i class="fas fa-users"></i>
-
-<h2 id="customers">
-
-0
-
-</h2>
-
-<p>Customers</p>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<i class="fas fa-shopping-cart"></i>
-
-<h2 id="orders">
-
-0
-
-</h2>
-
-<p>Total Orders</p>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<i class="fas fa-dollar-sign"></i>
-
-<h2 id="revenue">
-
-Rs.0
-
-</h2>
-
-<p>Total Revenue</p>
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-<h2 class="section-title">
-
-Quick Actions
-
-</h2>
-
-
-
-
-<div class="actions">
-
-
-
-<div class="action-card">
-
-    <i class="fas fa-store"></i>
-
-    <h3>Manage Sellers</h3>
-
-    <button onclick="location.href='admin-sellers.html'">
-
-        Open
-
-    </button>
-
-</div>
-
-
-
-
-
-<div class="action-card">
-
-<i class="fas fa-boxes"></i>
-
-<h3>Manage Products</h3>
-
-<button onclick="location.href='admin-products.html'">
-
-Open
-
-</button>
-
-</div>
-
-
-
-
-
-
-<div class="action-card">
-
-<i class="fas fa-shopping-cart"></i>
-
-<h3>Manage Orders</h3>
-
-<button onclick="location.href='admin-orders.html'">
-
-Open
-
-</button>
-
-</div>
-
-
-
-<div class="action-card">
-
-<i class="fas fa-file-alt"></i>
-
-<h3>Reports</h3>
-
-<button onclick="location.href='admin-reports.html'">
-
-Open
-
-</button>
-
-</div>
-
-
-
-</div>
-
-
-
-
-<div class="table-box">
-
-
-<h2>
-
-Recent Orders
-
-</h2>
-
-
-
-<table>
-
-
-<thead>
-
-<tr>
-
-<th>Order ID</th>
-
-<th>Customer</th>
-
-<th>Product</th>
-
-<th>Status</th>
-
-</tr>
-
-</thead>
-
-
-
-<tbody id="orderTable">
-
-
-<tr>
-
-<td>#1001</td>
-
-<td>John</td>
-
-<td>iPhone 15 Pro</td>
-
-<td>Pending</td>
-
-</tr>
-
-
-<tr>
-
-<td>#1002</td>
-
-<td>Emma</td>
-
-<td>Gaming Laptop</td>
-
-<td>Delivered</td>
-
-</tr>
-
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-
-
-</div>
-
-
-<script src="js/admin-dashboard.js"></script>
-
-
-
-
-</body>
-
+    <script src="js/admin-dashboard.js"></script>
+  </body>
 </html>

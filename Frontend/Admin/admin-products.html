@@ -1,388 +1,222 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
+    <title>Admin Products | Smart Gadget Marketplace</title>
 
-<meta charset="UTF-8">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
 
-<title>Admin Products | Smart Gadget Marketplace</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
 
+      body {
+        background: #0a0f1f;
+        color: white;
+      }
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      .header {
+        background: #050816;
 
+        padding: 20px 40px;
 
-<style>
+        display: flex;
 
+        justify-content: space-between;
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
+        align-items: center;
 
+        border-bottom: 1px solid #1e293b;
+      }
 
+      .header h1 {
+        color: #4da8ff;
 
-body{
+        font-size: 28px;
+      }
 
-background:#0A0F1F;
-color:white;
+      .back {
+        background: #1f2937;
 
-}
+        color: #4da8ff;
 
+        border: 1px solid #4da8ff;
 
+        padding: 10px 25px;
 
+        border-radius: 8px;
 
-.header{
+        cursor: pointer;
+      }
 
-background:#050816;
+      .back:hover {
+        background: #4da8ff;
 
-padding:20px 40px;
+        color: white;
+      }
 
-display:flex;
+      .container {
+        padding: 40px;
+      }
 
-justify-content:space-between;
+      .top {
+        display: flex;
 
-align-items:center;
+        justify-content: space-between;
 
-border-bottom:1px solid #1E293B;
+        align-items: center;
 
-}
+        margin-bottom: 30px;
+      }
 
+      .search {
+        width: 350px;
 
+        padding: 14px;
 
-.header h1{
+        background: #111827;
 
-color:#4DA8FF;
+        border: 1px solid #1e293b;
 
-font-size:28px;
+        border-radius: 8px;
 
-}
+        color: white;
+      }
 
+      .table-box {
+        background: #111827;
 
+        border: 1px solid #1e293b;
 
+        border-radius: 15px;
 
-.back{
+        padding: 25px;
 
-background:#1F2937;
+        box-shadow: 0 0 20px rgba(77, 168, 255, 0.15);
+      }
 
-color:#4DA8FF;
+      table {
+        width: 100%;
 
-border:1px solid #4DA8FF;
+        border-collapse: collapse;
+      }
 
-padding:10px 25px;
+      th {
+        background: #050816;
 
-border-radius:8px;
+        color: #4da8ff;
 
-cursor:pointer;
+        padding: 15px;
 
-}
+        text-align: left;
+      }
 
+      td {
+        padding: 15px;
 
+        border-bottom: 1px solid #1e293b;
 
+        color: #cbd5e1;
+      }
 
-.back:hover{
+      tr:hover {
+        background: #1f2937;
+      }
 
-background:#4DA8FF;
+      .status {
+        padding: 6px 14px;
 
-color:white;
+        border-radius: 20px;
 
-}
+        background: #16a34a;
 
+        color: white;
 
+        font-size: 13px;
+      }
 
+      .delete {
+        background: #ef4444;
 
-.container{
+        border: none;
 
-padding:40px;
+        color: white;
 
-}
+        padding: 8px 18px;
 
+        border-radius: 8px;
 
+        cursor: pointer;
+      }
 
+      .delete:hover {
+        background: #b91c1c;
+      }
+    </style>
+  </head>
 
-.top{
+  <body>
+    <div class="header">
+      <h1>
+        <i class="fas fa-box"></i>
 
-display:flex;
+        Manage Products
+      </h1>
 
-justify-content:space-between;
+      <button class="back" onclick="back()">
+        <i class="fas fa-arrow-left"></i>
 
-align-items:center;
+        Dashboard
+      </button>
+    </div>
 
-margin-bottom:30px;
+    <div class="container">
+      <div class="top">
+        <h2>All Products</h2>
 
-}
+        <input
+          class="search"
+          id="search"
+          placeholder="Search Product..."
+          onkeyup="searchProduct()"
+        />
+      </div>
 
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
 
+              <th>Product Name</th>
 
+              <th>Seller</th>
 
-.search{
+              <th>Category</th>
 
-width:350px;
+              <th>Price</th>
 
-padding:14px;
+              <th>Stock</th>
 
-background:#111827;
+              <th>Status</th>
 
-border:1px solid #1E293B;
+              <th>Action</th>
+            </tr>
+          </thead>
 
-border-radius:8px;
+          <tbody id="productList"></tbody>
+        </table>
+      </div>
+    </div>
 
-color:white;
-
-}
-
-
-
-
-.table-box{
-
-
-background:#111827;
-
-border:1px solid #1E293B;
-
-border-radius:15px;
-
-padding:25px;
-
-box-shadow:0 0 20px rgba(77,168,255,.15);
-
-
-}
-
-
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-
-
-th{
-
-background:#050816;
-
-color:#4DA8FF;
-
-padding:15px;
-
-text-align:left;
-
-}
-
-
-
-td{
-
-padding:15px;
-
-border-bottom:1px solid #1E293B;
-
-color:#cbd5e1;
-
-}
-
-
-
-tr:hover{
-
-background:#1F2937;
-
-}
-
-
-
-
-
-.status{
-
-
-padding:6px 14px;
-
-border-radius:20px;
-
-background:#16a34a;
-
-color:white;
-
-font-size:13px;
-
-
-}
-
-
-
-
-.delete{
-
-
-background:#ef4444;
-
-border:none;
-
-color:white;
-
-padding:8px 18px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-
-
-.delete:hover{
-
-background:#b91c1c;
-
-}
-
-
-
-
-</style>
-
-
-</head>
-
-
-
-<body>
-
-
-
-
-<div class="header">
-
-
-<h1>
-
-<i class="fas fa-box"></i>
-
-Manage Products
-
-</h1>
-
-
-
-<button class="back" onclick="back()">
-
-<i class="fas fa-arrow-left"></i>
-
-Dashboard
-
-</button>
-
-
-</div>
-
-
-
-
-
-
-<div class="container">
-
-
-
-<div class="top">
-
-
-<h2>
-
-All Products
-
-</h2>
-
-
-
-<input 
-
-class="search"
-
-id="search"
-
-placeholder="Search Product..."
-
-onkeyup="searchProduct()">
-
-
-</div>
-
-
-
-
-
-<div class="table-box">
-
-
-<table>
-
-
-<thead>
-
-
-<tr>
-
-
-<th>ID</th>
-
-<th>Product Name</th>
-
-<th>Seller</th>
-
-<th>Category</th>
-
-<th>Price</th>
-
-<th>Stock</th>
-
-<th>Status</th>
-
-<th>Action</th>
-
-
-</tr>
-
-
-</thead>
-
-
-
-<tbody id="productList">
-
-
-
-</tbody>
-
-
-
-</table>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-<script src="admin-products.js"></script>
-
-
-
-</body>
-
+    <script src="admin-products.js"></script>
+  </body>
 </html>

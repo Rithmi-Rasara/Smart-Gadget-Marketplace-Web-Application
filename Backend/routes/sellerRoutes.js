@@ -8,20 +8,14 @@ const oracledb = require("oracledb");
 
 const { getOracle } = require("../config/oracle");
 
+router.get("/products/:seller_id", async (req, res) => {
+  let connection;
 
+  try {
+    connection = await getOracle();
 
-router.get("/products/:seller_id", async(req,res)=>{
-
-let connection;
-
-try{
-
-connection = await getOracle();
-
-
-const result = await connection.execute(
-
-`
+    const result = await connection.execute(
+      `
 SELECT
 
 p.product_id,
@@ -52,77 +46,45 @@ ORDER BY p.product_id DESC
 
 `,
 
-{
-seller_id:req.params.seller_id
-},
+      {
+        seller_id: req.params.seller_id,
+      },
 
-{
-outFormat:oracledb.OUT_FORMAT_OBJECT
-}
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-);
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
 
-
-res.json(result.rows);
-
-
-}
-
-catch(error){
-
-console.log(error);
-
-
-res.status(500).json({
-
-success:false,
-message:error.message
-
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  } finally {
+    if (connection) await connection.close();
+  }
 });
 
-}
+router.post("/products", async (req, res) => {
+  let connection;
 
+  try {
+    connection = await getOracle();
 
-finally{
+    const {
+      product_name,
+      category_id,
+      price,
+      stock_quantity,
+      seller_id,
+      description,
+    } = req.body;
 
-if(connection)
-await connection.close();
-
-}
-
-
-});
-
-
-router.post("/products", async(req,res)=>{
-
-
-let connection;
-
-
-try{
-
-
-connection = await getOracle();
-
-
-
-const {
-
-product_name,
-category_id,
-price,
-stock_quantity,
-seller_id,
-description
-
-}=req.body;
-
-
-
-await connection.execute(
-
-`
+    await connection.execute(
+      `
 INSERT INTO products
 
 (
@@ -151,97 +113,50 @@ SYSDATE
 
 `,
 
-{
+      {
+        seller_id,
+        category_id,
+        product_name,
+        description,
+        price,
+        stock_quantity,
+      },
+    );
 
+    await connection.commit();
 
-seller_id,
-category_id,
-product_name,
-description,
-price,
-stock_quantity
-}
+    res.json({
+      success: true,
 
+      message: "Product Added Successfully",
+    });
+  } catch (error) {
+    console.log(error);
 
-);
+    if (connection) {
+      await connection.rollback();
+    }
 
+    res.status(500).json({
+      success: false,
 
-
-await connection.commit();
-
-
-
-res.json({
-
-success:true,
-
-message:"Product Added Successfully"
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
 });
 
+router.get("/product/:id", async (req, res) => {
+  let connection;
 
+  try {
+    connection = await getOracle();
 
-}
-
-catch(error){
-
-
-console.log(error);
-
-
-
-if(connection){
-
-await connection.rollback();
-
-}
-
-
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
-});
-
-
-}
-
-
-finally{
-
-
-if(connection){
-
-await connection.close();
-
-}
-
-
-}
-
-
-
-});
-
-router.get("/product/:id", async(req,res)=>{
-
-
-let connection;
-
-
-try{
-
-
-connection = await getOracle();
-
-
-
-const result = await connection.execute(
-
-`
+    const result = await connection.execute(
+      `
 
 SELECT
 
@@ -264,108 +179,55 @@ WHERE product_id=:id
 
 `,
 
-{
+      {
+        id: req.params.id,
+      },
 
-id:req.params.id
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-},
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
 
+        message: "Product Not Found",
+      });
+    }
 
-{
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.log(error);
 
-outFormat:oracledb.OUT_FORMAT_OBJECT
+    res.status(500).json({
+      success: false,
 
-}
-
-
-);
-
-
-
-if(result.rows.length === 0){
-
-return res.status(404).json({
-
-success:false,
-
-message:"Product Not Found"
-
-});
-
-}
-
-
-
-res.json(result.rows[0]);
-
-
-
-}
-
-
-catch(error){
-
-
-console.log(error);
-
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
-});
-
-
-}
-
-
-
-finally{
-
-
-if(connection){
-
-await connection.close();
-
-}
-
-
-}
-
-
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
 });
 
 console.log("UPDATE ROUTE REGISTERED");
 
+router.put("/products/:id", async (req, res) => {
+  console.log("UPDATE ROUTE HIT");
 
-router.put("/products/:id", async(req,res)=>{
+  let connection;
 
+  try {
+    console.log("PRODUCT ID:", req.params.id);
 
-console.log("UPDATE ROUTE HIT");
+    console.log("DATA:", req.body);
 
+    connection = await getOracle();
 
-let connection;
-
-
-try{
-
-
-console.log("PRODUCT ID:",req.params.id);
-
-console.log("DATA:",req.body);
-
-
-
-connection = await getOracle();
-
-
-
-const result = await connection.execute(
-
-`
+    const result = await connection.execute(
+      `
 
 UPDATE products
 
@@ -385,111 +247,55 @@ WHERE product_id=:id
 
 `,
 
-{
+      {
+        product_name: req.body.product_name,
 
+        description: req.body.description,
 
-product_name:req.body.product_name,
+        price: req.body.price,
 
-description:req.body.description,
+        stock_quantity: req.body.stock_quantity,
 
-price:req.body.price,
+        id: req.params.id,
+      },
+    );
 
-stock_quantity:req.body.stock_quantity,
+    console.log("ROWS:", result.rowsAffected);
 
-id:req.params.id
+    await connection.commit();
 
+    res.json({
+      success: true,
 
-}
+      message: "Product Updated Successfully",
+    });
+  } catch (error) {
+    console.log(error);
 
+    if (connection) {
+      await connection.rollback();
+    }
 
-);
+    res.status(500).json({
+      success: false,
 
-
-
-console.log(
-"ROWS:",
-result.rowsAffected
-);
-
-
-
-await connection.commit();
-
-
-
-res.json({
-
-success:true,
-
-message:"Product Updated Successfully"
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
 });
 
+router.delete("/products/:id", async (req, res) => {
+  let connection;
 
+  try {
+    connection = await getOracle();
 
-}
-
-catch(error){
-
-
-console.log(error);
-
-
-
-if(connection){
-
-await connection.rollback();
-
-}
-
-
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
-});
-
-
-}
-
-
-
-finally{
-
-
-if(connection){
-
-await connection.close();
-
-}
-
-
-}
-
-
-
-});
-
-
-router.delete("/products/:id", async(req,res)=>{
-
-
-let connection;
-
-
-try{
-
-
-connection = await getOracle();
-
-
-
-await connection.execute(
-
-`
+    await connection.execute(
+      `
 
 DELETE FROM products
 
@@ -497,83 +303,41 @@ WHERE product_id=:id
 
 `,
 
-{
+      {
+        id: req.params.id,
+      },
+    );
 
-id:req.params.id
+    await connection.commit();
 
-}
+    res.json({
+      success: true,
 
-);
+      message: "Product Deleted",
+    });
+  } catch (error) {
+    console.log(error);
 
+    res.status(500).json({
+      success: false,
 
-
-await connection.commit();
-
-
-
-res.json({
-
-success:true,
-
-message:"Product Deleted"
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
 });
 
+router.get("/orders/:seller_id", async (req, res) => {
+  let connection;
 
+  try {
+    connection = await getOracle();
 
-}
-
-catch(error){
-
-
-console.log(error);
-
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
-});
-
-
-}
-
-
-finally{
-
-
-if(connection){
-
-await connection.close();
-
-}
-
-
-}
-
-
-
-});
-
-
-router.get("/orders/:seller_id", async(req,res)=>{
-
-
-let connection;
-
-
-try{
-
-
-connection = await getOracle();
-
-
-
-const result = await connection.execute(
-
-`
+    const result = await connection.execute(
+      `
 
 SELECT
 
@@ -650,86 +414,43 @@ ORDER BY o.order_date DESC
 
 `,
 
-{
+      {
+        seller_id: req.params.seller_id,
+      },
 
-seller_id:req.params.seller_id
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-},
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
 
+    res.status(500).json({
+      success: false,
 
-{
-
-outFormat:oracledb.OUT_FORMAT_OBJECT
-
-}
-
-
-);
-
-
-
-res.json(result.rows);
-
-
-
-}
-
-catch(error){
-
-
-console.log(error);
-
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
 });
 
+router.put("/delivery/update/:id", async (req, res) => {
+  let connection;
 
-}
+  try {
+    connection = await getOracle();
 
-finally{
+    const id = req.params.id;
 
+    const status = req.body.status;
 
-if(connection){
-
-await connection.close();
-
-}
-
-
-}
-
-
-
-});
-
-
-router.put("/delivery/update/:id", async(req,res)=>{
-
-
-let connection;
-
-
-try{
-
-
-connection = await getOracle();
-
-
-
-const id=req.params.id;
-
-const status=req.body.status;
-
-
-
-await connection.execute(
-
-`
+    await connection.execute(
+      `
 
 UPDATE deliveries
 
@@ -740,25 +461,16 @@ WHERE delivery_id=:id
 
 `,
 
-{
+      {
+        status,
 
-status,
+        id,
+      },
+    );
 
-id
-
-}
-
-);
-
-
-
-
-if(status==="DELIVERED"){
-
-
-await connection.execute(
-
-`
+    if (status === "DELIVERED") {
+      await connection.execute(
+        `
 
 UPDATE deliveries
 
@@ -769,85 +481,42 @@ WHERE delivery_id=:id
 
 `,
 
-{
+        {
+          id,
+        },
+      );
+    }
 
-id
+    await connection.commit();
 
-}
+    res.json({
+      success: true,
 
-);
+      message: "Delivery Updated",
+    });
+  } catch (error) {
+    console.log(error);
 
+    res.status(500).json({
+      success: false,
 
-}
-
-
-
-
-await connection.commit();
-
-
-
-res.json({
-
-success:true,
-
-message:"Delivery Updated"
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
 });
 
+router.get("/dashboard/:seller_id", async (req, res) => {
+  let connection;
 
+  try {
+    connection = await getOracle();
 
-}
-
-catch(error){
-
-
-console.log(error);
-
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
-});
-
-
-}
-
-finally{
-
-
-if(connection){
-
-await connection.close();
-
-}
-
-
-}
-
-
-
-});
-
-router.get("/dashboard/:seller_id", async(req,res)=>{
-
-
-let connection;
-
-
-try{
-
-
-connection=await getOracle();
-
-
-
-const result=await connection.execute(
-
-`
+    const result = await connection.execute(
+      `
 
 SELECT
 
@@ -882,150 +551,98 @@ WHERE p.seller_id=:seller_id
 
 `,
 
-{
+      {
+        seller_id: req.params.seller_id,
+      },
 
-seller_id:req.params.seller_id
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-},
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.log(error);
 
-{
+    res.status(500).json({
+      success: false,
 
-outFormat:oracledb.OUT_FORMAT_OBJECT
-
-}
-
-
-);
-
-
-
-res.json(result.rows[0]);
-
-
-
-}
-
-catch(error){
-
-
-console.log(error);
-
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
 });
 
+router.put("/test/:id", (req, res) => {
+  console.log("PUT ROUTE WORKING");
 
-}
+  res.json({
+    success: true,
 
-finally{
-
-
-if(connection){
-
-await connection.close();
-
-}
-
-
-}
-
-
-
+    message: "PUT working",
+  });
 });
-
-
-router.put("/test/:id",(req,res)=>{
-
-console.log("PUT ROUTE WORKING");
-
-res.json({
-
-success:true,
-
-message:"PUT working"
-
-});
-
-});
-
 
 router.get("/profile/:seller_id", async (req, res) => {
+  console.log("PROFILE ROUTE HIT");
+  console.log("Seller ID:", req.params.seller_id);
 
-    console.log("PROFILE ROUTE HIT");
-    console.log("Seller ID:", req.params.seller_id);
+  let connection;
 
-    let connection;
+  try {
+    connection = await getOracle();
 
-    try {
-
-        connection = await getOracle();
-
-        const result = await connection.execute(
-            `
+    const result = await connection.execute(
+      `
             SELECT *
             FROM sellers
             WHERE seller_id = :id
             `,
-            {
-                id: Number(req.params.seller_id)
-            },
-            {
-                outFormat: oracledb.OUT_FORMAT_OBJECT
-            }
-        );
+      {
+        id: Number(req.params.seller_id),
+      },
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-        console.log(result.rows);
+    console.log(result.rows);
 
-        if (result.rows.length === 0) {
-            return res.status(404).json({
-                message: "Seller not found"
-            });
-        }
-
-        res.json(result.rows[0]);
-
-    } catch (err) {
-
-        console.log(err);
-
-        res.status(500).json({
-            error: err.message
-        });
-
-    } finally {
-
-        if (connection) {
-            await connection.close();
-        }
-
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        message: "Seller not found",
+      });
     }
 
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      error: err.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
 });
 
 router.get("/hello", (req, res) => {
-    res.send("Seller Route Working");
+  res.send("Seller Route Working");
 });
 
-router.put("/profile/:seller_id", async(req,res)=>{
+router.put("/profile/:seller_id", async (req, res) => {
+  let connection;
 
-let connection;
+  try {
+    connection = await getOracle();
 
-
-try{
-
-
-connection = await getOracle();
-
-
-
-const result = await connection.execute(
-
-`
+    const result = await connection.execute(
+      `
 UPDATE sellers
 
 SET
@@ -1041,121 +658,67 @@ WHERE seller_id=:seller_id
 
 `,
 
-{
+      {
+        shop_name: req.body.shop_name,
 
-shop_name:req.body.shop_name,
+        owner_name: req.body.owner_name,
 
-owner_name:req.body.owner_name,
+        email: req.body.email,
 
-email:req.body.email,
+        phone: req.body.phone,
 
-phone:req.body.phone,
+        address: req.body.address,
 
-address:req.body.address,
+        city: req.body.city,
 
-city:req.body.city,
+        seller_id: req.params.seller_id,
+      },
+    );
 
-seller_id:req.params.seller_id
+    console.log("UPDATED ROWS:", result.rowsAffected);
 
-}
+    await connection.commit();
 
-);
+    if (result.rowsAffected === 0) {
+      return res.status(404).json({
+        success: false,
 
+        message: "Seller not found",
+      });
+    }
 
+    res.json({
+      success: true,
 
-console.log(
-"UPDATED ROWS:",
-result.rowsAffected
-);
+      message: "Profile Updated Successfully",
+    });
+  } catch (error) {
+    console.log(error);
 
+    if (connection) {
+      await connection.rollback();
+    }
 
+    res.status(500).json({
+      success: false,
 
-await connection.commit();
-
-
-
-if(result.rowsAffected === 0){
-
-return res.status(404).json({
-
-success:false,
-
-message:"Seller not found"
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
 });
 
-}
+router.put("/profile/:seller_id", async (req, res) => {
+  let connection;
 
+  try {
+    connection = await getOracle();
 
-
-res.json({
-
-success:true,
-
-message:"Profile Updated Successfully"
-
-});
-
-
-
-}
-
-
-catch(error){
-
-
-console.log(error);
-
-
-
-if(connection){
-
-await connection.rollback();
-
-}
-
-
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
-});
-
-
-}
-
-
-finally{
-
-
-if(connection){
-
-await connection.close();
-
-}
-
-
-}
-
-
-
-});
-
-router.put("/profile/:seller_id", async(req,res)=>{
-
-let connection;
-
-try{
-
-connection = await getOracle();
-
-
-await connection.execute(
-
-`
+    await connection.execute(
+      `
 UPDATE sellers
 
 SET
@@ -1170,56 +733,33 @@ city=:city
 WHERE seller_id=:seller_id
 `,
 
-{
+      {
+        shop_name: req.body.shop_name,
+        owner_name: req.body.owner_name,
+        email: req.body.email,
+        phone: req.body.phone,
+        address: req.body.address,
+        city: req.body.city,
+        seller_id: req.params.seller_id,
+      },
+    );
 
-shop_name:req.body.shop_name,
-owner_name:req.body.owner_name,
-email:req.body.email,
-phone:req.body.phone,
-address:req.body.address,
-city:req.body.city,
-seller_id:req.params.seller_id
+    await connection.commit();
 
-}
+    res.json({
+      success: true,
+      message: "Profile Updated",
+    });
+  } catch (error) {
+    console.log(error);
 
-);
-
-
-await connection.commit();
-
-
-res.json({
-
-success:true,
-message:"Profile Updated"
-
-});
-
-
-}
-
-catch(error){
-
-console.log(error);
-
-res.status(500).json({
-
-success:false,
-message:error.message
-
-});
-
-
-}
-
-finally{
-
-if(connection)
-await connection.close();
-
-}
-
-
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  } finally {
+    if (connection) await connection.close();
+  }
 });
 
 module.exports = router;

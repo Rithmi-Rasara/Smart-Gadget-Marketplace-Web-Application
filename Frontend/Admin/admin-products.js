@@ -1,85 +1,36 @@
 console.log("admin products loaded");
 
+let products = [];
 
-
-let products=[];
-
-
-
-document.addEventListener(
-"DOMContentLoaded",
-()=>{
-
-loadProducts();
-
+document.addEventListener("DOMContentLoaded", () => {
+  loadProducts();
 });
 
+async function loadProducts() {
+  try {
+    const response = await fetch("http://localhost:3000/api/admin/products");
 
-async function loadProducts(){
+    const data = await response.json();
 
+    console.log(data);
 
-try{
+    products = data;
 
+    displayProducts(products);
+  } catch (error) {
+    console.log(error);
 
-const response = await fetch(
-
-"http://localhost:3000/api/admin/products"
-
-);
-
-
-
-const data = await response.json();
-
-
-
-console.log(data);
-
-
-
-products=data;
-
-
-
-displayProducts(products);
-
-
-
+    alert("Products Load Failed");
+  }
 }
 
+function displayProducts(list) {
+  const table = document.getElementById("productList");
 
+  table.innerHTML = "";
 
-catch(error){
-
-
-console.log(error);
-
-alert("Products Load Failed");
-
-
-}
-
-
-
-}
-
-function displayProducts(list){
-
-
-const table =
-document.getElementById("productList");
-
-
-
-table.innerHTML="";
-
-
-
-
-if(list.length===0){
-
-
-table.innerHTML=`
+  if (list.length === 0) {
+    table.innerHTML = `
 
 <tr>
 
@@ -93,19 +44,11 @@ No Products Found
 
 `;
 
+    return;
+  }
 
-return;
-
-
-}
-
-
-
-
-list.forEach(product=>{
-
-
-table.innerHTML += `
+  list.forEach((product) => {
+    table.innerHTML += `
 
 
 
@@ -211,137 +154,49 @@ Delete
 
 
 `;
-
-
-});
-
-
+  });
 }
 
+function searchProduct() {
+  const value = document.getElementById("search").value.toLowerCase();
 
-function searchProduct(){
+  const filtered = products.filter((product) =>
+    product.PRODUCT_NAME.toLowerCase().includes(value),
+  );
 
-
-const value =
-document.getElementById("search")
-.value
-.toLowerCase();
-
-
-
-const filtered =
-products.filter(product=>
-
-
-product.PRODUCT_NAME
-.toLowerCase()
-.includes(value)
-
-
-);
-
-
-
-displayProducts(filtered);
-
-
-
+  displayProducts(filtered);
 }
 
-async function deleteProduct(id){
+async function deleteProduct(id) {
+  const confirmDelete = confirm("Are you sure delete this product?");
 
+  if (!confirmDelete) return;
 
+  try {
+    const response = await fetch(
+      "http://localhost:3000/api/admin/products/" + id,
 
-const confirmDelete =
-confirm(
-"Are you sure delete this product?"
-);
+      {
+        method: "DELETE",
+      },
+    );
 
+    const result = await response.json();
 
+    if (result.success) {
+      alert("Product Deleted Successfully");
 
-if(!confirmDelete)
-return;
+      loadProducts();
+    } else {
+      alert(result.message);
+    }
+  } catch (error) {
+    console.log(error);
 
-
-
-
-
-try{
-
-
-const response =
-await fetch(
-
-"http://localhost:3000/api/admin/products/"+id,
-
-{
-
-method:"DELETE"
-
+    alert("Delete Failed");
+  }
 }
 
-);
-
-
-
-
-
-const result =
-await response.json();
-
-
-
-
-if(result.success){
-
-
-alert("Product Deleted Successfully");
-
-
-loadProducts();
-
-
-}
-
-
-else{
-
-
-alert(result.message);
-
-
-}
-
-
-
-}
-
-
-
-catch(error){
-
-
-console.log(error);
-
-
-alert("Delete Failed");
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-function back(){
-
-
-window.location.href="admin-dashboard.html";
-
-
+function back() {
+  window.location.href = "admin-dashboard.html";
 }

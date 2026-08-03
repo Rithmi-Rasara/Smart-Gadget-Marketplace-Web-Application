@@ -7,13 +7,20 @@ async function loadCheckout() {
 
   if (!user) {
     alert("Please Login");
-
     window.location.href = "../login.html";
-
     return;
   }
 
   document.getElementById("customerName").innerHTML = user.USERNAME;
+
+  const selected = JSON.parse(localStorage.getItem("selectedCart")) || [];
+
+  if (selected.length === 0) {
+    document.getElementById("itemCount").innerHTML = 0;
+    document.getElementById("totalAmount").innerHTML = 0;
+
+    return;
+  }
 
   try {
     const response = await fetch(
@@ -22,15 +29,23 @@ async function loadCheckout() {
 
     const cart = await response.json();
 
+    const selectedItems = cart.filter((item) =>
+      selected.includes(Number(item.CART_ID)),
+    );
+
     let total = 0;
 
-    cart.forEach((item) => {
-      total += item.TOTAL_PRICE;
+    selectedItems.forEach((item) => {
+      total += Number(item.TOTAL_PRICE);
     });
 
-    document.getElementById("itemCount").innerHTML = cart.length;
+    document.getElementById("itemCount").innerHTML = selectedItems.length;
 
-    document.getElementById("totalAmount").innerHTML = total;
+    document.getElementById("totalAmount").innerHTML = total.toFixed(2);
+
+    console.log("Selected Items:", selectedItems);
+
+    console.log("Checkout Total:", total);
   } catch (error) {
     console.log(error);
   }
@@ -39,23 +54,25 @@ async function loadCheckout() {
 async function createOrder() {
   const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!user) {
-    alert("Please Login");
+  const address = document.getElementById("address").value;
+
+  const selected = JSON.parse(localStorage.getItem("selectedCart")) || [];
+
+  if (selected.length === 0) {
+    alert("Please select products");
 
     return;
   }
 
-  const address = document.getElementById("address").value;
-
-  const payment = document.getElementById("payment").value;
-
-  if (address === "") {
-    alert("Enter Delivery Address");
+  if (address.trim() === "") {
+    alert("Enter Address");
 
     return;
   }
 
   try {
+    console.log("Sending cart ids:", selected);
+
     const response = await fetch(
       "http://localhost:3000/api/orders/create",
 
@@ -70,23 +87,32 @@ async function createOrder() {
           customer_id: user.CUSTOMER_ID,
 
           address: address,
+
+          cart_ids: selected,
         }),
       },
     );
 
     const result = await response.json();
+
+    console.log("Order Response:", result);
+
     if (result.success) {
+      // Save ONLY created order details
+
       localStorage.setItem(
         "lastOrder",
 
         JSON.stringify({
           order_id: result.order_id,
 
-          total_amount: result.total,
+          total_amount: Number(result.total),
         }),
       );
 
-      alert("Order Created Successfully\nOrder ID : " + result.order_id);
+      // Remove selected products only
+
+      localStorage.removeItem("selectedCart");
 
       window.location.href = "payment.html";
     } else {

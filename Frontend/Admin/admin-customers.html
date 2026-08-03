@@ -1,411 +1,253 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
+    <title>Admin Customers | Smart Gadget Marketplace</title>
 
-<meta charset="UTF-8">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
 
-<title>Admin Customers | Smart Gadget Marketplace</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
 
+      body {
+        background: #0a0f1f;
+        color: white;
+      }
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      /* HEADER */
 
+      .header {
+        background: #050816;
 
-<style>
+        padding: 20px 40px;
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
+        display: flex;
 
+        justify-content: space-between;
 
-body{
+        align-items: center;
 
-background:#0A0F1F;
-color:white;
+        border-bottom: 1px solid #1e293b;
+      }
 
-}
+      .header h1 {
+        color: #4da8ff;
+      }
 
+      .back {
+        background: #1f2937;
 
-/* HEADER */
+        color: #4da8ff;
 
-.header{
+        border: 1px solid #4da8ff;
 
-background:#050816;
+        padding: 10px 25px;
 
-padding:20px 40px;
+        border-radius: 8px;
 
-display:flex;
+        cursor: pointer;
+      }
 
-justify-content:space-between;
+      .back:hover {
+        background: #4da8ff;
 
-align-items:center;
+        color: white;
+      }
 
-border-bottom:1px solid #1E293B;
+      .container {
+        padding: 40px;
+      }
 
-}
+      .title {
+        font-size: 30px;
 
+        color: #4da8ff;
 
-.header h1{
+        margin-bottom: 25px;
+      }
 
-color:#4DA8FF;
+      /* SEARCH */
 
-}
+      .search-box {
+        background: #111827;
 
+        padding: 20px;
 
-.back{
+        border-radius: 12px;
 
-background:#1F2937;
+        margin-bottom: 25px;
 
-color:#4DA8FF;
+        border: 1px solid #1e293b;
+      }
 
-border:1px solid #4DA8FF;
+      .search-box input {
+        width: 100%;
 
-padding:10px 25px;
+        padding: 14px;
 
-border-radius:8px;
+        background: #1f2937;
 
-cursor:pointer;
+        border: none;
 
-}
+        border-radius: 8px;
 
+        color: white;
 
+        font-size: 15px;
+      }
 
-.back:hover{
+      /* TABLE */
 
-background:#4DA8FF;
+      .table-box {
+        background: #111827;
 
-color:white;
+        border-radius: 15px;
 
-}
+        overflow: hidden;
 
+        border: 1px solid #1e293b;
 
+        box-shadow: 0 0 25px rgba(77, 168, 255, 0.15);
+      }
 
+      table {
+        width: 100%;
 
-.container{
+        border-collapse: collapse;
+      }
 
-padding:40px;
+      thead {
+        background: #050816;
+      }
 
-}
+      th {
+        padding: 18px;
 
+        color: #4da8ff;
 
+        text-align: left;
+      }
 
-.title{
+      td {
+        padding: 16px;
 
-font-size:30px;
+        border-bottom: 1px solid #1e293b;
 
-color:#4DA8FF;
+        color: #cbd5e1;
+      }
 
-margin-bottom:25px;
+      tr:hover {
+        background: #1f2937;
+      }
 
-}
+      /* STATUS */
 
+      .status {
+        padding: 6px 15px;
 
+        border-radius: 20px;
 
-/* SEARCH */
+        font-size: 13px;
+      }
 
-.search-box{
+      .active {
+        background: #16a34a;
+      }
 
-background:#111827;
+      .blocked {
+        background: #ef4444;
+      }
 
-padding:20px;
+      /* BUTTON */
 
-border-radius:12px;
+      .delete {
+        background: #ef4444;
 
-margin-bottom:25px;
+        color: white;
 
-border:1px solid #1E293B;
+        padding: 8px 15px;
 
-}
+        border: none;
 
+        border-radius: 8px;
 
-.search-box input{
+        cursor: pointer;
+      }
 
-width:100%;
+      .delete:hover {
+        background: #dc2626;
+      }
 
-padding:14px;
+      .empty {
+        text-align: center;
 
-background:#1F2937;
+        padding: 40px;
 
-border:none;
+        color: #94a3b8;
+      }
+    </style>
+  </head>
 
-border-radius:8px;
+  <body>
+    <div class="header">
+      <h1>
+        <i class="fas fa-users"></i>
 
-color:white;
+        Manage Customers
+      </h1>
 
-font-size:15px;
+      <button class="back" onclick="back()">
+        <i class="fas fa-arrow-left"></i>
 
-}
+        Dashboard
+      </button>
+    </div>
 
+    <div class="container">
+      <h2 class="title">Customer Accounts</h2>
 
+      <div class="search-box">
+        <input
+          id="search"
+          placeholder="Search customer..."
+          onkeyup="searchCustomer()"
+        />
+      </div>
 
-/* TABLE */
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
 
-.table-box{
+              <th>Name</th>
 
-background:#111827;
+              <th>Email</th>
 
-border-radius:15px;
+              <th>Phone</th>
 
-overflow:hidden;
+              <th>City</th>
 
-border:1px solid #1E293B;
+              <th>Status</th>
 
-box-shadow:0 0 25px rgba(77,168,255,.15);
+              <th>Action</th>
+            </tr>
+          </thead>
 
-}
+          <tbody id="customerList"></tbody>
+        </table>
+      </div>
+    </div>
 
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-
-thead{
-
-background:#050816;
-
-}
-
-
-th{
-
-padding:18px;
-
-color:#4DA8FF;
-
-text-align:left;
-
-}
-
-
-td{
-
-padding:16px;
-
-border-bottom:1px solid #1E293B;
-
-color:#cbd5e1;
-
-}
-
-
-tr:hover{
-
-background:#1F2937;
-
-}
-
-
-
-/* STATUS */
-
-
-.status{
-
-padding:6px 15px;
-
-border-radius:20px;
-
-font-size:13px;
-
-}
-
-
-
-.active{
-
-background:#16a34a;
-
-}
-
-
-.blocked{
-
-background:#ef4444;
-
-}
-
-
-
-/* BUTTON */
-
-.delete{
-
-background:#ef4444;
-
-color:white;
-
-padding:8px 15px;
-
-border:none;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-
-.delete:hover{
-
-background:#dc2626;
-
-}
-
-
-
-.empty{
-
-text-align:center;
-
-padding:40px;
-
-color:#94a3b8;
-
-}
-
-
-
-</style>
-
-
-</head>
-
-
-
-<body>
-
-
-
-<div class="header">
-
-
-<h1>
-
-<i class="fas fa-users"></i>
-
-Manage Customers
-
-</h1>
-
-
-
-<button class="back"
-onclick="back()">
-
-<i class="fas fa-arrow-left"></i>
-
-Dashboard
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-<div class="container">
-
-
-<h2 class="title">
-
-Customer Accounts
-
-</h2>
-
-
-
-
-<div class="search-box">
-
-
-<input
-
-id="search"
-
-placeholder="Search customer..."
-
-onkeyup="searchCustomer()">
-
-
-
-</div>
-
-
-
-
-
-
-<div class="table-box">
-
-
-<table>
-
-
-<thead>
-
-<tr>
-
-<th>ID</th>
-
-<th>Name</th>
-
-<th>Email</th>
-
-<th>Phone</th>
-
-<th>City</th>
-
-<th>Status</th>
-
-<th>Action</th>
-
-</tr>
-
-
-</thead>
-
-
-
-<tbody id="customerList">
-
-
-</tbody>
-
-
-
-</table>
-
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-<script src="admin-customers.js"></script>
-
-
-</body>
-
+    <script src="admin-customers.js"></script>
+  </body>
 </html>

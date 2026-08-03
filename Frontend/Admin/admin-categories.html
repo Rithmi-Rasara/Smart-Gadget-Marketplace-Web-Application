@@ -1,367 +1,220 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
+    <title>Admin Categories</title>
 
-<meta charset="UTF-8">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
 
-<title>Admin Categories</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
 
+      body {
+        background: #0a0f1f;
+        color: white;
+      }
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      .header {
+        background: #050816;
 
+        padding: 20px 40px;
 
-<style>
+        display: flex;
 
+        justify-content: space-between;
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
+        align-items: center;
 
+        border-bottom: 1px solid #1e293b;
+      }
 
-body{
+      .header h1 {
+        color: #4da8ff;
+      }
 
-background:#0A0F1F;
-color:white;
+      .back {
+        background: #1f2937;
 
-}
+        color: #4da8ff;
 
+        border: 1px solid #4da8ff;
 
+        padding: 10px 25px;
 
-.header{
+        border-radius: 8px;
 
-background:#050816;
+        cursor: pointer;
+      }
 
-padding:20px 40px;
+      .container {
+        padding: 40px;
+      }
 
-display:flex;
+      .box {
+        background: #111827;
 
-justify-content:space-between;
+        border: 1px solid #1e293b;
 
-align-items:center;
+        border-radius: 15px;
 
-border-bottom:1px solid #1E293B;
+        padding: 30px;
 
-}
+        margin-bottom: 30px;
 
+        box-shadow: 0 0 20px rgba(77, 168, 255, 0.15);
+      }
 
+      h2 {
+        color: #4da8ff;
 
-.header h1{
+        margin-bottom: 20px;
+      }
 
-color:#4DA8FF;
+      input,
+      textarea {
+        width: 100%;
 
-}
+        padding: 14px;
 
+        margin-bottom: 15px;
 
+        background: #1f2937;
 
-.back{
+        border: none;
 
-background:#1F2937;
+        border-radius: 8px;
 
-color:#4DA8FF;
+        color: white;
+      }
 
-border:1px solid #4DA8FF;
+      textarea {
+        height: 100px;
 
-padding:10px 25px;
+        resize: none;
+      }
 
-border-radius:8px;
+      .add-btn {
+        background: #4da8ff;
 
-cursor:pointer;
+        border: none;
 
-}
+        padding: 12px 30px;
 
+        border-radius: 8px;
 
+        color: white;
 
-.container{
+        cursor: pointer;
+      }
 
-padding:40px;
+      table {
+        width: 100%;
 
-}
+        border-collapse: collapse;
+      }
 
+      th {
+        background: #050816;
 
+        color: #4da8ff;
 
-.box{
+        padding: 15px;
 
-background:#111827;
+        text-align: left;
+      }
 
-border:1px solid #1E293B;
+      td {
+        padding: 15px;
 
-border-radius:15px;
+        border-bottom: 1px solid #1e293b;
 
-padding:30px;
+        color: #cbd5e1;
+      }
 
-margin-bottom:30px;
+      tr:hover {
+        background: #1f2937;
+      }
 
-box-shadow:0 0 20px rgba(77,168,255,.15);
+      .delete {
+        background: #ef4444;
 
-}
+        color: white;
 
+        border: none;
 
+        padding: 8px 18px;
 
-h2{
+        border-radius: 8px;
 
-color:#4DA8FF;
+        cursor: pointer;
+      }
+    </style>
+  </head>
 
-margin-bottom:20px;
+  <body>
+    <div class="header">
+      <h1>
+        <i class="fas fa-list"></i>
 
-}
+        Manage Categories
+      </h1>
 
+      <button class="back" onclick="back()">
+        <i class="fas fa-arrow-left"></i>
 
+        Dashboard
+      </button>
+    </div>
 
-input,
-textarea{
+    <div class="container">
+      <div class="box">
+        <h2>
+          <i class="fas fa-plus-circle"></i>
 
-width:100%;
+          Add Category
+        </h2>
 
-padding:14px;
+        <input id="category_name" placeholder="Category Name" />
 
-margin-bottom:15px;
+        <textarea id="description" placeholder="Description"></textarea>
 
-background:#1F2937;
+        <button class="add-btn" onclick="addCategory()">
+          <i class="fas fa-plus"></i>
 
-border:none;
+          Add Category
+        </button>
+      </div>
 
-border-radius:8px;
+      <div class="box">
+        <h2>All Categories</h2>
 
-color:white;
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
 
-}
+              <th>Name</th>
 
+              <th>Description</th>
 
+              <th>Action</th>
+            </tr>
+          </thead>
 
-textarea{
+          <tbody id="categoryList"></tbody>
+        </table>
+      </div>
+    </div>
 
-height:100px;
-
-resize:none;
-
-}
-
-
-
-.add-btn{
-
-background:#4DA8FF;
-
-border:none;
-
-padding:12px 30px;
-
-border-radius:8px;
-
-color:white;
-
-cursor:pointer;
-
-}
-
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-
-
-th{
-
-background:#050816;
-
-color:#4DA8FF;
-
-padding:15px;
-
-text-align:left;
-
-}
-
-
-
-td{
-
-padding:15px;
-
-border-bottom:1px solid #1E293B;
-
-color:#cbd5e1;
-
-}
-
-
-
-tr:hover{
-
-background:#1F2937;
-
-}
-
-
-
-.delete{
-
-background:#ef4444;
-
-color:white;
-
-border:none;
-
-padding:8px 18px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-
-
-</style>
-
-
-</head>
-
-
-<body>
-
-
-
-<div class="header">
-
-
-<h1>
-
-<i class="fas fa-list"></i>
-
-Manage Categories
-
-</h1>
-
-
-
-<button class="back"
-onclick="back()">
-
-<i class="fas fa-arrow-left"></i>
-
-Dashboard
-
-</button>
-
-
-</div>
-
-
-
-
-<div class="container">
-
-
-
-<div class="box">
-
-
-<h2>
-
-<i class="fas fa-plus-circle"></i>
-
-Add Category
-
-</h2>
-
-
-
-<input 
-id="category_name"
-placeholder="Category Name">
-
-
-
-<textarea
-id="description"
-placeholder="Description"></textarea>
-
-
-
-<button class="add-btn"
-onclick="addCategory()">
-
-<i class="fas fa-plus"></i>
-
-Add Category
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-<div class="box">
-
-
-<h2>
-
-All Categories
-
-</h2>
-
-
-
-<table>
-
-
-<thead>
-
-<tr>
-
-<th>ID</th>
-
-<th>Name</th>
-
-<th>Description</th>
-
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-
-
-<tbody id="categoryList">
-
-
-</tbody>
-
-
-
-</table>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-<script src="admin-categories.js"></script>
-
-
-</body>
-
+    <script src="admin-categories.js"></script>
+  </body>
 </html>

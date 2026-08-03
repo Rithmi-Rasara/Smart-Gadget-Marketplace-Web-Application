@@ -4,114 +4,82 @@ const router = express.Router();
 const oracledb = require("oracledb");
 const { getOracle } = require("../config/oracle");
 
+router.get("/dashboard/:id", async (req, res) => {
+  let connection;
 
-router.get("/dashboard/:id", async(req,res)=>{
+  try {
+    connection = await getOracle();
 
-let connection;
+    const id = req.params.id;
 
-try{
-
-connection = await getOracle();
-
-const id = req.params.id;
-
-
-const ordersResult = await connection.execute(
-`
+    const ordersResult = await connection.execute(
+      `
 SELECT COUNT(*) AS TOTAL
 FROM orders
 WHERE customer_id=:id
 `,
-{id},
-{
-outFormat:oracledb.OUT_FORMAT_OBJECT
-}
-);
+      { id },
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-
-const cartResult = await connection.execute(
-`
+    const cartResult = await connection.execute(
+      `
 SELECT COUNT(*) AS TOTAL
 FROM cart
 WHERE customer_id=:id
 `,
-{id},
-{
-outFormat:oracledb.OUT_FORMAT_OBJECT
-}
-);
+      { id },
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-const deliveryResult = await connection.execute(
-`
+    const deliveryResult = await connection.execute(
+      `
 SELECT COUNT(*) AS TOTAL
 FROM deliveries d
 JOIN orders o
 ON d.order_id=o.order_id
 WHERE o.customer_id=:id
 `,
-{id},
-{
-outFormat:oracledb.OUT_FORMAT_OBJECT
-}
-);
+      { id },
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-
-const spentResult = await connection.execute(
-`
+    const spentResult = await connection.execute(
+      `
 SELECT NVL(SUM(total_amount),0) AS TOTAL
 FROM orders
-WHERE customer_id=:id
+WHERE customer_id = :id
 `,
-{id},
-{
-outFormat:oracledb.OUT_FORMAT_OBJECT
-}
-);
+      { id },
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
+    res.json({
+      orders: ordersResult.rows[0].TOTAL,
+      cart: cartResult.rows[0].TOTAL,
+      deliveries: deliveryResult.rows[0].TOTAL,
+      spent: spentResult.rows[0].TOTAL,
+    });
+  } catch (error) {
+    console.log("Dashboard Error:", error);
 
+    res.status(500).json({
+      success: false,
 
-res.json({
-
-orders: ordersResult.rows[0].TOTAL,
-
-cart: cartResult.rows[0].TOTAL,
-
-deliveries: deliveryResult.rows[0].TOTAL,
-
-spent: spentResult.rows[0].TOTAL
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) await connection.close();
+  }
 });
-
-
-}
-
-catch(error){
-
-console.log("Dashboard Error:",error);
-
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
-});
-
-
-}
-
-finally{
-
-if(connection)
-await connection.close();
-
-}
-
-
-});
-
-
 
 router.get("/products", async (req, res) => {
   let connection;
@@ -259,7 +227,6 @@ WHERE o.customer_id=:customer_id
   }
 });
 
-
 router.get("/order-details/:id", async (req, res) => {
   let connection;
 
@@ -365,7 +332,6 @@ router.post("/cart", async (req, res) => {
 
   try {
     connection = await getOracle();
-
 
     const check = await connection.execute(
       `

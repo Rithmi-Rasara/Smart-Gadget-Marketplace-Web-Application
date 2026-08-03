@@ -4,18 +4,14 @@ const router = express.Router();
 const { getOracle } = require("../config/oracle");
 const oracledb = require("oracledb");
 
-
 router.get("/", async (req, res) => {
+  let connection;
 
-    let connection;
+  try {
+    connection = await getOracle();
 
-    try {
-
-        connection = await getOracle();
-
-        const result = await connection.execute(
-
-            `
+    const result = await connection.execute(
+      `
             SELECT
 
                 p.product_id,
@@ -41,35 +37,26 @@ router.get("/", async (req, res) => {
             ORDER BY p.product_name
             `,
 
-            [],
+      [],
 
-            {
-                outFormat: oracledb.OUT_FORMAT_OBJECT
-            }
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-        );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
 
-        res.json(result.rows);
-
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
     }
-    catch (error) {
-
-        console.log(error);
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
-    }
-    finally {
-
-        if (connection) {
-            await connection.close();
-        }
-
-    }
-
+  }
 });
 
 module.exports = router;

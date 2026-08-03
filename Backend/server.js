@@ -6,7 +6,6 @@ const path = require("path");
 
 const oracledb = require("oracledb");
 
-
 const connectMongoDB = require("./config/mongodb");
 const { getOracle } = require("./config/oracle");
 
@@ -18,144 +17,73 @@ const sellerRoutes = require("./routes/sellerRoutes");
 
 console.log("SELLER ROUTES LOADED");
 
-
 const Log = require("./models/Log");
 
-
-
 const app = express();
-
 
 app.use(cors());
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-
-
 app.use("/api/admin", adminRoutes);
 app.use("/api/customer", customerRoutes);
 app.use("/api/products", productRoutes);
-app.use("/api/orders",orderRoutes);
-app.use("/api/seller",sellerRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/seller", sellerRoutes);
 
-
-
-app.use(
-express.static(
-path.join(__dirname,"../Frontend")
-)
-);
-
-
+app.use(express.static(path.join(__dirname, "../Frontend")));
 
 connectMongoDB();
 
+app.post("/api/register", async (req, res) => {
+  let connection;
 
+  const { full_name, email, username, password, phone, role } = req.body;
 
+  if (!full_name || !email || !username || !password || !role) {
+    return res.status(400).json({
+      success: false,
 
-app.post("/api/register", async(req,res)=>{
+      message: "All fields are required",
+    });
+  }
 
+  const userRole = role.toUpperCase();
 
-    let connection;
+  if (userRole !== "CUSTOMER" && userRole !== "SELLER") {
+    return res.status(400).json({
+      success: false,
 
+      message: "Invalid Role",
+    });
+  }
 
-    const {
+  try {
+    connection = await getOracle();
 
-        full_name,
-        email,
-        username,
-        password,
-        phone,
-        role
-
-    } = req.body;
-
-
-
-    if(
-        !full_name ||
-        !email ||
-        !username ||
-        !password ||
-        !role
-    ){
-
-        return res.status(400).json({
-
-            success:false,
-
-            message:"All fields are required"
-
-        });
-
-    }
-
-
-
-    const userRole = role.toUpperCase();
-
-
-
-    if(
-        userRole !== "CUSTOMER" &&
-        userRole !== "SELLER"
-    ){
-
-        return res.status(400).json({
-
-            success:false,
-
-            message:"Invalid Role"
-
-        });
-
-    }
-
-
-
-    try{
-
-
-        connection = await getOracle();
-
-
-        const checkUser =
-        await connection.execute(
-
-            `
+    const checkUser = await connection.execute(
+      `
             SELECT username
             FROM user_accounts
             WHERE username=:username
             `,
 
-            {
-                username
-            }
+      {
+        username,
+      },
+    );
 
-        );
+    if (checkUser.rows.length > 0) {
+      return res.status(409).json({
+        success: false,
 
+        message: "Username already exists",
+      });
+    }
 
-
-        if(checkUser.rows.length > 0){
-
-
-            return res.status(409).json({
-
-                success:false,
-
-                message:"Username already exists"
-
-            });
-
-
-        }
-
-
-const checkEmail =
-await connection.execute(
-
-`
+    const checkEmail = await connection.execute(
+      `
 SELECT email
 FROM customers
 WHERE email=:email
@@ -167,44 +95,26 @@ FROM sellers
 WHERE email=:email
 `,
 
-{
-    email
-}
+      {
+        email,
+      },
+    );
 
-);
+    if (checkEmail.rows.length > 0) {
+      return res.status(409).json({
+        success: false,
 
+        message: "Email already exists",
+      });
+    }
 
-if(checkEmail.rows.length > 0){
+    let customer_id = null;
 
-    return res.status(409).json({
+    let seller_id = null;
 
-        success:false,
-
-        message:"Email already exists"
-
-    });
-
-}
-
-
-
-
-        let customer_id=null;
-
-        let seller_id=null;
-
-
-
-        if(userRole==="CUSTOMER"){
-
-
-
-            const customer =
-
-            await connection.execute(
-
-
-            `
+    if (userRole === "CUSTOMER") {
+      const customer = await connection.execute(
+        `
             INSERT INTO customers
 
             (
@@ -228,43 +138,25 @@ if(checkEmail.rows.length > 0){
 
             `,
 
+        {
+          full_name,
 
-            {
+          email,
 
-                full_name,
+          phone,
 
-                email,
+          customer_id: {
+            dir: oracledb.BIND_OUT,
 
-                phone,
+            type: oracledb.NUMBER,
+          },
+        },
+      );
 
+      customer_id = customer.outBinds.customer_id[0];
 
-                customer_id:{
-
-                    dir:oracledb.BIND_OUT,
-
-                    type:oracledb.NUMBER
-
-                }
-
-
-            }
-
-
-
-            );
-
-
-
-            customer_id =
-            customer.outBinds.customer_id[0];
-
-
-
-
-            await connection.execute(
-
-
-            `
+      await connection.execute(
+        `
             INSERT INTO user_accounts
 
             (
@@ -287,37 +179,19 @@ if(checkEmail.rows.length > 0){
 
             `,
 
+        {
+          username,
 
-            {
+          password,
 
-                username,
+          customer_id,
+        },
+      );
+    }
 
-                password,
-
-                customer_id
-
-
-            }
-
-
-            );
-
-
-
-
-        }
-
-
-        if(userRole==="SELLER"){
-
-
-
-            const seller =
-
-            await connection.execute(
-
-
-            `
+    if (userRole === "SELLER") {
+      const seller = await connection.execute(
+        `
             INSERT INTO sellers
 
             (
@@ -344,53 +218,27 @@ if(checkEmail.rows.length > 0){
 
             `,
 
-            {
+        {
+          shop_name: full_name + " Shop",
 
+          owner_name: full_name,
 
-                shop_name:
-                full_name+" Shop",
+          email,
 
+          phone,
 
-                owner_name:
-                full_name,
+          seller_id: {
+            dir: oracledb.BIND_OUT,
 
+            type: oracledb.NUMBER,
+          },
+        },
+      );
 
-                email,
+      seller_id = seller.outBinds.seller_id[0];
 
-
-                phone,
-
-
-                seller_id:{
-
-                    dir:oracledb.BIND_OUT,
-
-                    type:oracledb.NUMBER
-
-                }
-
-
-            }
-
-
-
-            );
-
-
-
-
-            seller_id =
-            seller.outBinds.seller_id[0];
-
-
-
-
-
-
-            await connection.execute(
-
-
-            `
+      await connection.execute(
+        `
             INSERT INTO user_accounts
 
             (
@@ -413,143 +261,69 @@ if(checkEmail.rows.length > 0){
 
             `,
 
+        {
+          username,
 
-            {
+          password,
 
-                username,
-
-                password,
-
-                seller_id
-
-            }
-
-
-            );
-
-
-
-        }
-
-
-
-
-
-        await connection.commit();
-
-
-        await Log.create({
-
-
-            username,
-
-            role:userRole,
-
-            action:"REGISTER",
-
-            date:new Date()
-
-
-        });
-
-
-
-
-
-        res.json({
-
-            success:true,
-
-            message:
-            "Registration Successful"
-
-        });
-
-
-
-
+          seller_id,
+        },
+      );
     }
 
-    catch(error){
+    await connection.commit();
 
+    await Log.create({
+      username,
 
-        console.log(error);
+      role: userRole,
 
+      action: "REGISTER",
 
+      date: new Date(),
+    });
 
-        if(connection){
+    res.json({
+      success: true,
 
-            await connection.rollback();
+      message: "Registration Successful",
+    });
+  } catch (error) {
+    console.log(error);
 
-        }
-
-
-
-        res.status(500).json({
-
-            success:false,
-
-            message:error.message
-
-        });
-
-
-
+    if (connection) {
+      await connection.rollback();
     }
 
-    
+    res.status(500).json({
+      success: false,
 
-
-    finally{
-
-
-        if(connection){
-
-            await connection.close();
-
-        }
-
-
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
     }
-    
-
-
-
+  }
 });
 
+app.post("/api/login", async (req, res) => {
+  let connection;
 
-app.post("/api/login", async(req,res)=>{
+  const { username, password } = req.body;
 
-    let connection;
+  if (!username || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "Username and Password required",
+    });
+  }
 
-    const {
-        username,
-        password
-    } = req.body;
+  try {
+    connection = await getOracle();
 
-
-    if(!username || !password){
-
-        return res.status(400).json({
-
-            success:false,
-            message:"Username and Password required"
-
-        });
-
-    }
-
-
-    try{
-
-
-        connection = await getOracle();
-
-
-
-        const result = await connection.execute(
-
-        `
+    const result = await connection.execute(
+      `
         SELECT 
             user_id,
             username,
@@ -566,111 +340,58 @@ app.post("/api/login", async(req,res)=>{
         AND status='ACTIVE'
         `,
 
+      {
+        username,
+        password,
+      },
 
-        {
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
 
-            username,
-            password
+    if (result.rows.length === 0) {
+      return res.status(401).json({
+        success: false,
 
-        },
-
-
-        {
-
-            outFormat:oracledb.OUT_FORMAT_OBJECT
-
-        }
-
-
-        );
-
-
-
-        if(result.rows.length === 0){
-
-
-            return res.status(401).json({
-
-                success:false,
-
-                message:"Invalid Username or Password"
-
-            });
-
-
-        }
-
-
-
-        const user = result.rows[0];
-
-        await Log.create({
-
-            username:user.USERNAME,
-
-            role:user.ROLE,
-
-            action:"LOGIN",
-
-            date:new Date()
-
-        });
-
-
-
-
-        res.json({
-
-            success:true,
-
-            message:"Login Successful",
-
-            user:user
-
-        });
-
-
-
+        message: "Invalid Username or Password",
+      });
     }
 
-    catch(error){
+    const user = result.rows[0];
 
+    await Log.create({
+      username: user.USERNAME,
 
-        console.log(error);
+      role: user.ROLE,
 
+      action: "LOGIN",
 
-        res.status(500).json({
+      date: new Date(),
+    });
 
-            success:false,
+    res.json({
+      success: true,
 
-            message:error.message
+      message: "Login Successful",
 
-        });
+      user: user,
+    });
+  } catch (error) {
+    console.log(error);
 
+    res.status(500).json({
+      success: false,
 
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
     }
-
-
-    finally{
-
-
-        if(connection){
-
-            await connection.close();
-
-        }
-
-    }
-
-
+  }
 });
 
-
-app.listen(
-    process.env.PORT || 3000,
-    ()=>{
-        console.log(
-            `Server running on port ${process.env.PORT || 3000}`
-        );
-    }
-);
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server running on port ${process.env.PORT || 3000}`);
+});
