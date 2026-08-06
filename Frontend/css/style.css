@@ -5,6 +5,10 @@
   font-family: "Segoe UI";
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: #050816;
   color: white;
@@ -43,9 +47,27 @@ nav a:hover {
   color: #4da8ff;
 }
 
+.icons {
+  display: flex;
+  align-items: center;
+}
+
+.icons a {
+  color: white;
+  margin-left: 20px;
+  display: flex;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
 .icons i {
   font-size: 20px;
-  margin-left: 20px;
+}
+
+.icons a:hover {
+  color: #4da8ff;
+  transform: translateY(-2px);
 }
 
 /* HERO */
@@ -70,6 +92,25 @@ nav a:hover {
   text-align: center;
 }
 
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  background: rgba(77, 168, 255, 0.12);
+  border: 1px solid rgba(77, 168, 255, 0.4);
+  color: #4da8ff;
+
+  padding: 8px 20px;
+  border-radius: 30px;
+
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
+  margin-bottom: 25px;
+}
+
 .hero h1 {
   font-size: 80px;
 }
@@ -81,7 +122,14 @@ nav a:hover {
 .hero p {
   font-size: 22px;
 
-  margin: 30px;
+  margin: 30px auto;
+  max-width: 650px;
+
+  color: #cbd5e1;
+}
+
+.btn-link {
+  text-decoration: none;
 }
 
 button {
@@ -98,6 +146,21 @@ button {
   font-size: 18px;
 
   cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+button:hover {
+  background: #2f8fee;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(77, 168, 255, 0.35);
 }
 
 /* STATS */
@@ -122,12 +185,30 @@ button {
   border-radius: 20px;
 
   border: 1px solid #1e293b;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.stat:hover {
+  transform: translateY(-6px);
+  border-color: #4da8ff;
 }
 
 .stat i {
   font-size: 40px;
 
   color: #4da8ff;
+}
+
+.stat h2 {
+  margin: 12px 0 5px;
+  font-size: 32px;
+}
+
+.stat p {
+  color: #94a3b8;
 }
 
 /* COMMON */
@@ -144,6 +225,25 @@ button {
   margin-bottom: 50px;
 
   color: white;
+
+  position: relative;
+
+  padding-bottom: 20px;
+}
+
+.title::after {
+  content: "";
+
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 70px;
+  height: 4px;
+
+  background: #4da8ff;
+  border-radius: 4px;
 }
 
 .grid {
@@ -165,6 +265,18 @@ button {
   border: 1px solid #1e293b;
 
   text-align: center;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.card:hover,
+.product:hover {
+  transform: translateY(-8px);
+  border-color: #4da8ff;
+  box-shadow: 0 15px 35px rgba(77, 168, 255, 0.15);
 }
 
 .card i {
@@ -173,6 +285,15 @@ button {
   color: #4da8ff;
 
   margin-bottom: 20px;
+}
+
+.card h3 {
+  margin-bottom: 8px;
+}
+
+.card p {
+  color: #94a3b8;
+  font-size: 15px;
 }
 
 .product img {
@@ -191,12 +312,92 @@ button {
   margin: 15px;
 }
 
+.product p {
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+/* FEATURED PRODUCTS (dynamic, icon based) */
+
+.featured-grid {
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+}
+
+@media (max-width: 1100px) {
+  .featured-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featured-product {
+  position: relative;
+  padding-top: 45px;
+}
+
+.featured-tag {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+
+  background: #4da8ff;
+  color: white;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  padding: 5px 12px;
+  border-radius: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.product-icon {
+  font-size: 55px;
+  color: #4da8ff;
+  margin-bottom: 15px;
+}
+
+.featured-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 18px;
+  padding: 30px 0;
+}
+
+.featured-status i {
+  margin-right: 8px;
+  color: #4da8ff;
+}
+
+.category-card {
+  cursor: pointer;
+}
+
 .newsletter {
   background: #2563eb;
 
   padding: 80px;
 
   text-align: center;
+}
+
+.newsletter h2 {
+  font-size: 32px;
+}
+
+.newsletter p {
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 10px;
 }
 
 .newsletter input {
@@ -209,6 +410,22 @@ button {
   border: none;
 
   margin: 20px;
+
+  font-size: 15px;
+
+  outline: none;
+}
+
+.newsletter input:focus {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.newsletter button {
+  background: #050816;
+}
+
+.newsletter button:hover {
+  background: #111827;
 }
 
 footer {
