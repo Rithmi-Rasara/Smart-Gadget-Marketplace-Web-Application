@@ -128,7 +128,6 @@ router.post("/create", async (req, res) => {
       );
     }
 
-    // Delivery
     await connection.execute(
       `
             INSERT INTO deliveries

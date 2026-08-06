@@ -169,9 +169,6 @@ oi.line_total,
 
 s.shop_name,
 
-
--- DELIVERY DATA ADD HERE
-
 d.delivery_id,
 d.delivery_status,
 d.delivery_address,
@@ -455,49 +452,32 @@ SELECT
 
 c.cart_id,
 
-
 p.product_id,
-
 
 p.product_name,
 
-
 p.price,
-
 
 c.quantity,
 
-
 (p.price*c.quantity) AS TOTAL_PRICE,
-
 
 s.shop_name
 
-
-
 FROM cart c
-
 
 
 JOIN products p
 
 ON c.product_id=p.product_id
 
-
-
 JOIN sellers s
 
 ON p.seller_id=s.seller_id
 
-
-
 WHERE c.customer_id=:customer_id
 
-
-
 ORDER BY c.cart_id DESC
-
-
 
 `,
 
