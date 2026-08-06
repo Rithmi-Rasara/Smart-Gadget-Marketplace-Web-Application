@@ -3,7 +3,6 @@ const router = express.Router();
 const oracledb = require("oracledb");
 const { getOracle } = require("../config/oracle");
 
-// GET /api/admin/dashboard - summary cards for admin dashboard
 router.get("/dashboard", async (req, res) => {
   let connection;
 
@@ -40,7 +39,6 @@ FROM dual
   }
 });
 
-// GET /api/admin/orders - list all orders (used for recent orders table)
 router.get("/orders", async (req, res) => {
   let connection;
 
@@ -50,23 +48,27 @@ router.get("/orders", async (req, res) => {
     const result = await connection.execute(
       `
 SELECT
-o.ORDER_ID,
-c.FULL_NAME AS CUSTOMER_NAME,
-o.ORDER_DATE,
-o.TOTAL_AMOUNT,
-o.ORDER_STATUS
+    o.ORDER_ID,
+    c.FULL_NAME AS CUSTOMER_NAME,
+    o.ORDER_DATE,
+    o.TOTAL_AMOUNT,
+    o.ORDER_STATUS,
+    NVL(d.DELIVERY_STATUS, 'PENDING') AS DELIVERY_STATUS
 FROM ORDERS o
 JOIN CUSTOMERS c
-ON o.CUSTOMER_ID = c.CUSTOMER_ID
+    ON o.CUSTOMER_ID = c.CUSTOMER_ID
+LEFT JOIN DELIVERIES d
+    ON o.ORDER_ID = d.ORDER_ID
 ORDER BY o.ORDER_DATE DESC
 `,
       {},
       {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
-      },
+      }
     );
 
     res.json(result.rows);
+
   } catch (error) {
     console.log("ADMIN ORDERS ERROR:", error);
 
@@ -74,6 +76,7 @@ ORDER BY o.ORDER_DATE DESC
       success: false,
       message: error.message,
     });
+
   } finally {
     if (connection) {
       await connection.close();
@@ -81,7 +84,6 @@ ORDER BY o.ORDER_DATE DESC
   }
 });
 
-// GET /api/admin/sellers - list all sellers
 router.get("/sellers", async (req, res) => {
   let connection;
 
@@ -122,7 +124,6 @@ ORDER BY SELLER_ID DESC
   }
 });
 
-// PUT /api/admin/sellers/:id - approve/reject a seller
 router.put("/sellers/:id", async (req, res) => {
   let connection;
 
@@ -181,7 +182,6 @@ WHERE SELLER_ID = :id
   }
 });
 
-// GET /api/admin/reports - system overview + top selling products
 router.get("/reports", async (req, res) => {
   let connection;
 
@@ -241,6 +241,97 @@ FETCH FIRST 5 ROWS ONLY
   }
 });
 
+router.get("/products", async (req, res) => {
+  let connection;
+
+  try {
+    connection = await getOracle();
+
+    const result = await connection.execute(
+      `
+SELECT
+p.PRODUCT_ID,
+p.PRODUCT_NAME,
+p.PRICE,
+p.STOCK_QUANTITY,
+p.STATUS,
+c.CATEGORY_NAME,
+s.SHOP_NAME
+FROM PRODUCTS p
+LEFT JOIN CATEGORIES c
+ON p.CATEGORY_ID = c.CATEGORY_ID
+LEFT JOIN SELLERS s
+ON p.SELLER_ID = s.SELLER_ID
+ORDER BY p.PRODUCT_ID DESC
+`,
+      {},
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.log("ADMIN PRODUCTS ERROR:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
+});
+
+router.delete("/products/:id", async (req, res) => {
+  let connection;
+
+  try {
+    connection = await getOracle();
+
+    const result = await connection.execute(
+      `
+DELETE FROM PRODUCTS
+WHERE PRODUCT_ID = :id
+`,
+      {
+        id: Number(req.params.id),
+      },
+    );
+
+    await connection.commit();
+
+    if (result.rowsAffected === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Product Not Found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Product Deleted",
+    });
+  } catch (error) {
+    console.log("ADMIN PRODUCT DELETE ERROR:", error);
+
+    if (connection) {
+      await connection.rollback();
+    }
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.close();
+    }
+  }
+});
+
 router.get("/orders/:id", async (req, res) => {
   console.log("ORDER DETAILS ROUTE HIT");
 
@@ -282,7 +373,6 @@ ON o.CUSTOMER_ID = c.CUSTOMER_ID
 WHERE o.ORDER_ID = :id
 
 `,
-
       {
         id: order_id,
       },

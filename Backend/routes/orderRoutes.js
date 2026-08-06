@@ -98,7 +98,6 @@ router.post("/create", async (req, res) => {
 
     const order_id = order.outBinds.order_id[0];
 
-    // Insert Order Items
     for (const item of cart.rows) {
       await connection.execute(
         `
@@ -155,7 +154,6 @@ router.post("/create", async (req, res) => {
       },
     );
 
-    // Delete ONLY the selected cart items (not the whole cart)
     const deletePlaceholders = cart_ids.map((_, i) => `:d${i}`).join(",");
 
     const deleteBinds = { customer_id };
@@ -198,10 +196,6 @@ router.post("/create", async (req, res) => {
     }
   }
 });
-
-// =================================
-// CUSTOMER ORDERS VIEW
-// =================================
 
 router.get("/customer/:customer_id", async (req, res) => {
   let connection;
